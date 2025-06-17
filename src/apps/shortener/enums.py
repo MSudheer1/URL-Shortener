@@ -1,7 +1,8 @@
 from enum import Enum
 
-
-class ExpirationTimeMonthEnum(int, Enum):
-    three_months: int = 3
-    six_months: int = 6
-    twelve_months: int = 12
+class ExpirationUnitEnum(str, Enum):
+    minutes = "minutes"
+    hours = "hours"
+    days = "days"
+    months = "months"
+    years = "years"

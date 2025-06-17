@@ -1,39 +1,32 @@
 import random
-
 import string
-
 import pytz
-from fastapi import Request
+from fastapi import Request, HTTPException, status
 from datetime import datetime, timedelta
-
 from redis.asyncio import Redis
-
-from fastapi import HTTPException, status
-
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from apps.shortener.schemas import ShortenUrlRequest, ShortenUrlResponse
 from apps.shortener.models import ShortenedUrl
-from core.config import AppConfig
+from core.config import app_config
 
 
 class ShortenerController:
+    MAX_CACHE_TTL = 30 * 24 * 60 * 60  # 30 days in seconds
+
     @staticmethod
     def generate_random_characters(length: int) -> str:
         if length < 2:
-           raise ValueError("Length must be at least 2 to include both letter and digit.")
+            raise ValueError("Length must be at least 2 to include both letter and digit.")
         letters = string.ascii_letters
         digits = string.digits
         char_set = letters + digits
-        # Ensure at least one letter and one digit
-        code = [
-            random.choice(letters),
-            random.choice(digits),
-        ] + [random.choice(char_set) for _ in range(length - 2)]
+        code = [random.choice(letters), random.choice(digits)] + \
+               [random.choice(char_set) for _ in range(length - 2)]
         random.shuffle(code)
         return ''.join(code)
-    
+
     @staticmethod
     def utc_to_ist(utc_dt):
         ist = pytz.timezone("Asia/Kolkata")
@@ -46,22 +39,39 @@ class ShortenerController:
     ) -> ShortenUrlResponse:
         short_url = self.generate_random_characters(length=5)
 
-        # Pick custom domain if provided, otherwise fallback
-        domain = payload.custom_domain or AppConfig.default_domain
-        domain = domain.rstrip('/')  # Remove trailing slash if present
-
+        domain = (payload.custom_domain or app_config.default_domain).replace("http://", "").replace("https://", "").rstrip("/")
         full_short_url = f"{domain}/{short_url}"
+
+        now = datetime.utcnow()
+
+        # Calculate expiry
+        duration = payload.duration_value
+        unit = payload.duration_unit
+
+        if unit == "minutes":
+            expires_at = now + timedelta(minutes=duration)
+        elif unit == "hours":
+            expires_at = now + timedelta(hours=duration)
+        elif unit == "days":
+            expires_at = now + timedelta(days=duration)
+        elif unit == "months":
+            expires_at = now + timedelta(days=duration * 30)
+        elif unit == "years":
+            expires_at = now + timedelta(days=duration * 365)
+        else:
+            raise ValueError("Unsupported duration unit")
 
         shortened_url = ShortenedUrl(
             main_url=payload.main_url,
             short_url=short_url,
             custom_domain=domain,
-            created_at=datetime.utcnow(),  # Set created_at explicitly
-            updated_at=datetime.utcnow(),  # Set updated_at explicitly
-            expires_at=datetime.utcnow() + timedelta(hours=payload.expiration_time_month.value * 730),
+            created_at=now,
+            updated_at=now,
+            expires_at=expires_at,
         )
         db.add(shortened_url)
         await db.commit()
+
         return ShortenUrlResponse(
             main_url=payload.main_url,
             short_url=short_url,
@@ -71,32 +81,37 @@ class ShortenerController:
             expires_at=self.utc_to_ist(shortened_url.expires_at).strftime("%Y-%m-%d %H:%M:%S"),
         )
 
-    @staticmethod
     async def redirect_to_main_url(
-        db: AsyncSession, redis: Redis, short_url: str, request: Request
+        self, db: AsyncSession, redis: Redis, short_url: str, request: Request
     ) -> str:
-        host = request.headers.get("host")
-        domain = f"http://{host}"
+        # Get domain from request
+        host = request.headers.get("host", "").replace("http://", "").replace("https://", "").rstrip("/")
+        redis_key = f"{host}/{short_url}"
 
-        redis_key = f"{domain}/{short_url}"
-        main_url = await redis.get(redis_key)
-        if main_url:
-            return main_url
+        # Try Redis cache first
+        cached_url = await redis.get(redis_key)
+        if cached_url:
+            return cached_url
 
+        # Fallback to DB
         statement = select(ShortenedUrl).where(
             ShortenedUrl.short_url == short_url,
             ShortenedUrl.expired == False,
             ShortenedUrl.active == True,
-            (ShortenedUrl.custom_domain == domain) | (ShortenedUrl.custom_domain == None) | (ShortenedUrl.custom_domain == "")
+            (ShortenedUrl.custom_domain == host) |
+            (ShortenedUrl.custom_domain == '') |
+            (ShortenedUrl.custom_domain.is_(None))
         )
         results = await db.exec(statement)
-        shortened_url: ShortenedUrl = results.first()
+        shortened_url = results.first()
+
         if not shortened_url:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="shortened url not found",
+                detail="Shortened URL not found",
             )
-        
+
+        # Check expiration
         if shortened_url.expires_at and shortened_url.expires_at < datetime.utcnow():
             shortened_url.expired = True
             shortened_url.updated_at = datetime.utcnow()
@@ -106,14 +121,18 @@ class ShortenerController:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Shortened URL has expired",
             )
-        
-        main_url = shortened_url.main_url
 
-        await redis.set(
-            name=short_url,
-            value=main_url,
-            ex=2 * 60,
-        )
+        # Cache if valid
+        main_url = shortened_url.main_url
+        if main_url:
+            ttl = int((shortened_url.expires_at - datetime.utcnow()).total_seconds())
+            ttl = min(ttl, self.MAX_CACHE_TTL)
+            if ttl > 0:
+                await redis.set(
+                    name=redis_key,
+                    value=main_url,
+                    ex=ttl
+                )
 
         return main_url
 

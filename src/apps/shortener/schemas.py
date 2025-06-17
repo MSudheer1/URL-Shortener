@@ -1,17 +1,17 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, HttpUrl, AnyHttpUrl
 from datetime import datetime
 from typing import Optional
-from apps.shortener.enums import ExpirationTimeMonthEnum
+from apps.shortener.enums import ExpirationUnitEnum
 
 import re
-  
+
 
 class ShortenUrlRequest(BaseModel):
     main_url: str
-    expiration_time_month: ExpirationTimeMonthEnum = ExpirationTimeMonthEnum.six_months
+    duration_value: int = 6 # Default to 6 months
+    duration_unit: ExpirationUnitEnum = ExpirationUnitEnum.months
     custom_domain: Optional[str] = None
 
-    
     @field_validator("main_url", mode="before")
     def add_http_prefix_to_url(cls, value: str):
         if not re.match(r"^(http|https)://", value):
@@ -21,12 +21,22 @@ class ShortenUrlRequest(BaseModel):
     @field_validator("main_url", mode="after")
     def validate_http_url(cls, value: str):
         url_regex = re.compile(
-            r"^(https?://)"  # Protocol (http or https)
-            r"((www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,6})"  # Domain
-            r"(/[^\s]*)?$"  # Path and query parameters
+            r"^(https?://)"                              # Protocol
+            r"((www\.)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,})"   # Domain
+            r"([/?].*)?$"                                 # Optional path/query
         )
         if not url_regex.match(value):
-            raise ValueError("Invalid url")
+            raise ValueError("Invalid main URL format")
+        return value
+
+    @field_validator("custom_domain", mode="after")
+    def validate_custom_domain(cls, value: Optional[str]):
+        if value:
+            domain_regex = re.compile(
+                r"^(http://|https://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
+            )
+            if not domain_regex.match(value):
+                raise ValueError("Invalid custom domain format")
         return value
 
 

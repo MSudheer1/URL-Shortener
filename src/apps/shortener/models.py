@@ -5,12 +5,12 @@ from utils.common_models import BaseModel
 
 
 class ShortenedUrl(BaseModel, table=True):
-    id: int | None = Field(primary_key=True)
-    main_url: str = Field()
-    short_url: str = Field(index=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    main_url: str = Field(nullable=False)
+    short_url: str = Field(index=True, nullable=False, unique=True)
     custom_domain: Optional[str] = Field(default=None, index=True)
     active: bool = Field(default=True)
     expired: bool = Field(default=False)
-    created_at: datetime = Field(default_factory=datetime.utcnow)  # Ensure datetime format
-    updated_at: datetime = Field(default_factory=datetime.utcnow)
-    expires_at: datetime | None = Field(default=None)  # Ensure datetime format
+    created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    expires_at: Optional[datetime] = Field(default=None)

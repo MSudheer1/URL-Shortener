@@ -1,8 +1,7 @@
 from redis.asyncio import Redis
-from fastapi import Request
+from fastapi import Request, APIRouter, Depends, status
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from fastapi import APIRouter, Depends, status
 from fastapi.responses import RedirectResponse
 
 from apps.shortener.schemas import ShortenUrlRequest, ShortenUrlResponse

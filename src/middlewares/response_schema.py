@@ -1,4 +1,5 @@
 import json
+from typing import Callable
 
 from fastapi import Request, FastAPI, status
 from fastapi.responses import JSONResponse, Response
@@ -6,13 +7,16 @@ from fastapi.encoders import jsonable_encoder
 
 from utils.responses import ResponseStructure
 
+# Optional: Add paths that shouldn't be wrapped by the middleware
 specific_paths = []
 
 
 def response_schema_middleware(app: FastAPI):
     @app.middleware("http")
-    async def _(request: Request, call_next):
+    async def wrap_response(request: Request, call_next: Callable):
         response = await call_next(request)
+
+        # Skip middleware for FastAPI docs or excluded paths
         if request.url.path in [
             app.docs_url,
             app.openapi_url,
@@ -21,53 +25,55 @@ def response_schema_middleware(app: FastAPI):
             *specific_paths,
         ]:
             return response
-        if (
-            status.HTTP_400_BAD_REQUEST
-            > response.status_code
-            >= status.HTTP_300_MULTIPLE_CHOICES
-        ):
+
+        # Don't wrap 3xx redirects or error responses
+        if status.HTTP_300_MULTIPLE_CHOICES <= response.status_code < status.HTTP_400_BAD_REQUEST:
             return response
-        # Read the response body safely
+
+        # Collect response body content (only once!)
         body_chunks = [chunk async for chunk in response.body_iterator]
-        if not body_chunks:
+        full_body = b"".join(body_chunks)
+
+        if not full_body:
             return Response(
                 content=b"",
                 status_code=response.status_code,
                 headers=dict(response.headers),
                 media_type=response.media_type,
             )
-        response_body = body_chunks[0].decode()
 
-        # Only try to parse JSON if content-type is application/json and body is not empty
-        if (
-            response.headers.get("content-type", "").startswith("application/json")
-            and response_body
-        ):
+        content_type = response.headers.get("content-type", "")
+        headers = dict(response.headers)
+        headers.pop("content-length", None)
+
+        # If response is JSON, wrap it in ResponseStructure
+        if content_type.startswith("application/json"):
             try:
-                json_response_body = json.loads(response_body)
-            except Exception:
-                return Response(
-                    content=response_body,
+                json_body = json.loads(full_body.decode())
+                structured_response = ResponseStructure(
+                    details=json_body,
                     status_code=response.status_code,
-                    headers=dict(response.headers),
+                )
+                return JSONResponse(
+                    content=jsonable_encoder(structured_response),
+                    status_code=response.status_code,
+                    headers=headers,
+                )
+            except json.JSONDecodeError:
+                # Not a valid JSON, fallback to original
+                return Response(
+                    content=full_body,
+                    status_code=response.status_code,
+                    headers=headers,
                     media_type=response.media_type,
                 )
-            response_structure = ResponseStructure(
-                details=json_response_body,
-                status_code=response.status_code,
-            )
-            headers = dict(response.headers)
-            headers.pop("content-length", None)
-            return JSONResponse(
-                content=jsonable_encoder(response_structure),
-                status_code=response.status_code,
-                media_type=response.media_type,
-                headers=headers,
-            )
         else:
+            # For non-JSON (e.g., HTML, plain text, etc.), just return as-is
             return Response(
-                content=response_body,
+                content=full_body,
                 status_code=response.status_code,
-                headers=dict(response.headers),
+                headers=headers,
                 media_type=response.media_type,
             )
+
+    return app
