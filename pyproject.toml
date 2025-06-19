@@ -16,6 +16,8 @@ redis = "^6.0.0"
 uvicorn = {extras = ["standard"], version = "^0.34.2"}
 greenlet = "^3.2.2"
 gunicorn = "^23.0.0"
+pytz = "^2025.2"
+pytx = "^0.5.10"
 
 
 [build-system]

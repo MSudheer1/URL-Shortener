@@ -8,9 +8,11 @@ import re
 
 class ShortenUrlRequest(BaseModel):
     main_url: str
-    duration_value: int = 6 # Default to 6 months
-    duration_unit: ExpirationUnitEnum = ExpirationUnitEnum.months
+    duration_value: int = 1 # Default to 1 hour
+    duration_unit: ExpirationUnitEnum = ExpirationUnitEnum.hours
+    max_clicks: Optional[int] = None
     custom_domain: Optional[str] = None
+    custom_code: Optional[str] = None
 
     @field_validator("main_url", mode="before")
     def add_http_prefix_to_url(cls, value: str):
@@ -44,6 +46,7 @@ class ShortenUrlResponse(BaseModel):
     main_url: str
     short_url: str
     custom_domain: Optional[str] = None
+    max_clicks: Optional[int] = None
     created_at: str
     updated_at: str
     expires_at: str

@@ -9,6 +9,8 @@ class ShortenedUrl(BaseModel, table=True):
     main_url: str = Field(nullable=False)
     short_url: str = Field(index=True, nullable=False, unique=True)
     custom_domain: Optional[str] = Field(default=None, index=True)
+    click_count: int = Field(default=0, nullable=False)
+    max_clicks: Optional[int] = Field(default=None)
     active: bool = Field(default=True)
     expired: bool = Field(default=False)
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
