@@ -159,14 +159,15 @@ class ShortenerController:
         now = datetime.utcnow()
 
         # Click limit check
-        if shortened_url.max_clicks is not None and shortened_url.click_count >= shortened_url.max_clicks:
-            await db.delete(shortened_url)  # Deleted expired (click limit) from DB
-            await db.commit()
-            await redis.delete(short_url)  # Deleted expired (click limit) from Redis
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Shortened URL has expired (click limit reached)",
-            )
+        if shortened_url.max_clicks and shortened_url.max_clicks > 0:
+            if shortened_url.click_count >= shortened_url.max_clicks:
+                await db.delete(shortened_url)  # Deleted expired (click limit) from DB
+                await db.commit()
+                await redis.delete(short_url)  # Deleted expired (click limit) from Redis
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Shortened URL has expired (click limit reached)",
+                )
 
         if shortened_url.expires_at and shortened_url.expires_at < now:
             await db.delete(shortened_url)  # Deleted expired (time limit) from DB

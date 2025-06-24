@@ -65,7 +65,7 @@ class RedisCpConfig(BaseConfig):
         if self.password is None:
             return f"redis://{self.host}:{self.port}/{self.database}"
         else:
-            return f"redis://:{self.password}@{self.host}:{self.port}/{self.database}"
+            return f"rediss://{self.password}@{self.host}:{self.port}/{self.database}"
 
     model_config = {
         "env_prefix": "REDIS_",

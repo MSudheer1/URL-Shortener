@@ -147,4 +147,3 @@ async def get_click_count(
         "short_code": short_code,
         "clicks": url.click_count
     }
-
