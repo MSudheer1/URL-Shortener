@@ -1,21 +1,21 @@
 import json
 from typing import Callable
- 
+
 from fastapi import Request, FastAPI, status
 from fastapi.responses import JSONResponse, Response
 from fastapi.encoders import jsonable_encoder
- 
+
 from utils.responses import ResponseStructure
- 
+
 # Optional: Add paths that shouldn't be wrapped by the middleware
 specific_paths = []
- 
- 
+
+
 def response_schema_middleware(app: FastAPI):
     @app.middleware("http")
     async def wrap_response(request: Request, call_next: Callable):
         response = await call_next(request)
- 
+
         # Skip middleware for FastAPI docs or excluded paths
         if request.url.path in [
             app.docs_url,
@@ -25,15 +25,15 @@ def response_schema_middleware(app: FastAPI):
             *specific_paths,
         ]:
             return response
- 
+
         # Don't wrap 3xx redirects or error responses
         if status.HTTP_300_MULTIPLE_CHOICES <= response.status_code < status.HTTP_400_BAD_REQUEST:
             return response
- 
+
         # Collect response body content (only once!)
         body_chunks = [chunk async for chunk in response.body_iterator]
         full_body = b"".join(body_chunks)
- 
+
         if not full_body:
             return Response(
                 content=b"",
@@ -41,11 +41,11 @@ def response_schema_middleware(app: FastAPI):
                 headers=dict(response.headers),
                 media_type=response.media_type,
             )
- 
+
         content_type = response.headers.get("content-type", "")
         headers = dict(response.headers)
         headers.pop("content-length", None)
- 
+
         # If response is JSON, wrap it in ResponseStructure
         if content_type.startswith("application/json"):
             try:
@@ -75,5 +75,5 @@ def response_schema_middleware(app: FastAPI):
                 headers=headers,
                 media_type=response.media_type,
             )
- 
+
     return app

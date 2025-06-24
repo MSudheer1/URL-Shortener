@@ -10,9 +10,9 @@ class ShortenUrlRequest(BaseModel):
     main_url: str
     duration_value: int = 1 # Default to 1 hour
     duration_unit: ExpirationUnitEnum = ExpirationUnitEnum.hours
-    max_clicks: Optional[int] = 0
-    custom_domain: Optional[str] = ""
-    custom_code: Optional[str] = ""
+    max_clicks: Optional[int] = None
+    custom_domain: Optional[str] = None
+    custom_code: Optional[str] = None
 
     @field_validator("main_url", mode="before")
     def add_http_prefix_to_url(cls, value: str):
