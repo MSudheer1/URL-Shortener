@@ -1,0 +1,32 @@
+name: Deploy FastAPI Application to EC2
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Set up SSH for EC2
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+      - name: Deploy to EC2 Instance
+        run: |
+          echo "Connecting to EC2 instance..."
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
+            cd /home/ubuntu || exit 1
+            sudo lsof -t -i :8000 | xargs sudo kill -9 || true
+            rm -rf ShortUrlBackEnd
+            git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_PAT }}@github.com/${{ secrets.GH_USERNAME }}/ShortUrlBackEnd.git
+            cd ShortUrlBackEnd || exit 1
+            echo "${{ secrets.ENV_CONTENT }}" > src/.env
+            export PYTHONPATH=src
+ 
+            pip install poetry
+            poetry install
+            nohup poetry run uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
+            echo "FastAPI application started."
+          EOF
