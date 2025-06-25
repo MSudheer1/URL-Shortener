@@ -1,4 +1,6 @@
-from fastapi import FastAPI,Depends
+from fastapi import FastAPI,Depends, Request
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from core import events
 from core.router import initialize_routes
@@ -8,23 +10,20 @@ from middlewares.response_schema import response_schema_middleware
 from core.config import redis_config 
 from fastapi.middleware.cors import CORSMiddleware
 from services.redis import get_redis
+from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 app = FastAPI()
 
-
-from core.config import database_config, redis_config
-
-print("DB CONFIG:")
-print("  username:", database_config.username)
-print("  password:", database_config.password)
-print("  database:", database_config.database)
-print("  host:", database_config.host)
-print("  port:", database_config.port)
-print("REDIS CONFIG:")
-print("  host:", redis_config.host)
-print("  port:", redis_config.port)
-print("  database:", redis_config.database)
-print("  max_connections:", redis_config.max_connections)
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    # Extract the first error message, or use a default
+    msg = "Invalid input"
+    if exc.errors():
+        msg = exc.errors()[0].get("msg", msg)
+    return JSONResponse(
+        status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"status_code": 422, "msg": msg},
+    )
 
 app.add_middleware(
     CORSMiddleware,

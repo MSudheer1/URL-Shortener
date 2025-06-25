@@ -1,17 +1,14 @@
 from redis.asyncio import Redis
-from fastapi import Request, APIRouter, Depends, status, HTTPException 
-from sqlmodel.ext.asyncio.session import AsyncSession
-
+from fastapi import Request, APIRouter, Depends, status, HTTPException
 from fastapi.responses import RedirectResponse, JSONResponse
+from sqlmodel.ext.asyncio.session import AsyncSession
+from sqlmodel import select
 
-from apps.shortener.schemas import ShortenUrlRequest, ShortenUrlResponse
+from apps.shortener.schemas import ShortenUrlRequest, ShortenUrlResponse, UpdateSlugRequest, UpdateDomainRequest, UpdateSlugAndDomainRequest
 from apps.shortener.controllers import shortener_controller
-
+from apps.shortener.models import ShortenedUrl
 from services.db import get_session
 from services.redis import get_redis
-
-from sqlmodel import select
-from apps.shortener.models import ShortenedUrl
 
 shortener_router = APIRouter(
     tags=["Shortener"],
@@ -47,7 +44,6 @@ async def shorten(
     payload: ShortenUrlRequest,
     db: AsyncSession = Depends(get_session),
     redis: Redis = Depends(get_redis),
-
 ):
     return await shortener_controller.shorten(
         db=db,
@@ -86,7 +82,6 @@ async def redirect_to_main_url(
     db: AsyncSession = Depends(get_session),
     redis: Redis = Depends(get_redis),
 ):
-   # Call controller
     response = await shortener_controller.redirect_to_main_url(
         db=db,
         redis=redis,
@@ -94,7 +89,6 @@ async def redirect_to_main_url(
         request=request
     )
 
-    # If it's a RedirectResponse, Swagger fails — so we override only inside Swagger
     user_agent = request.headers.get("user-agent", "").lower()
     accept = request.headers.get("accept", "").lower()
 
@@ -114,6 +108,7 @@ async def redirect_to_main_url(
             )
         return response
     return response
+
 
 @shortener_router.get("/stats/{short_code}",
                       responses={
@@ -147,3 +142,27 @@ async def get_click_count(
         "short_code": short_code,
         "clicks": url.click_count
     }
+
+
+@shortener_router.patch("/update/slug")
+async def update_slug(
+    payload: UpdateSlugRequest,
+    db: AsyncSession = Depends(get_session)
+):
+    return await shortener_controller.update_slug(db=db, payload=payload)
+
+
+@shortener_router.patch("/update/domain")
+async def update_domain(
+    payload: UpdateDomainRequest,
+    db: AsyncSession = Depends(get_session)
+):
+    return await shortener_controller.update_domain(db=db, payload=payload)
+
+
+@shortener_router.patch("/update/slug-and-domain")
+async def update_slug_and_domain(
+    payload: UpdateSlugAndDomainRequest,
+    db: AsyncSession = Depends(get_session)
+):
+    return await shortener_controller.update_slug_and_domain(db=db, payload=payload)
