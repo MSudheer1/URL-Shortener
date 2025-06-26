@@ -27,8 +27,10 @@ jobs:
             cd ShortUrlBackEnd
             echo "${{ secrets.ENV_CONTENT }}" > src/.env
 
+            sudo lsof -t -i :8000 | xargs sudo kill -9 || true
             docker stop fastapi-app || true
             docker rm fastapi-app || true
+
             docker build -t fastapi-app .
             docker run -d --restart unless-stopped --name fastapi-app -p 8000:8000 fastapi-app
           EOF
