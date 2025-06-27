@@ -9,23 +9,29 @@ python = "^3.11"
 virtualenv = "^20.25.1"
 mako = ">=1.3.8"
 sqlmodel = "^0.0.22"
-fastapi = {extras = ["standard"], version = "^0.115.5"}
+fastapi = { extras = ["standard"], version = "^0.115.5" }
 asyncpg = "^0.30.0"
 alembic = "^1.14.0"
 pre-commit = "^4.0.1"
 pydantic-settings = "2.1.0"
 redis = "^6.0.0"
-uvicorn = {extras = ["standard"], version = "^0.34.2"}
+uvicorn = { extras = ["standard"], version = "^0.34.2" }
 greenlet = "^3.2.2"
 gunicorn = "^23.0.0"
 pytz = "^2025.2"
-windows-curses = "^2.4.1"
 python-jose = "^3.5.0"
 aiosmtplib = "^4.0.1"
 pyotp = "^2.9.0"
 psycopg2-binary = "^2.9.10"
 python-dotenv = "^1.1.1"
 
+# Platform-specific dependencies
+windows-curses = { version = "^2.4.1", optional = true, markers = "sys_platform == 'win32'" }
+
+# System dependencies (documentation only - must be installed manually)
+[tool.poetry.group.system.dependencies]
+libncurses-dev = { version = "*", platform = "linux" }    # Ubuntu/Debian
+ncurses = { version = "*", platform = "darwin" }         # macOS
 
 [build-system]
 requires = ["poetry-core"]
