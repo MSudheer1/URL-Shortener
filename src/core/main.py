@@ -5,25 +5,21 @@ from fastapi.responses import JSONResponse
 from core import events
 from core.router import initialize_routes
 
+from middlewares.response_schema import validation_exception_handler
 from middlewares.response_schema import response_schema_middleware
 
-from core.config import redis_config 
 from fastapi.middleware.cors import CORSMiddleware
-from services.redis import get_redis
-from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
+from core.router import main_router
+
+from core.auth import auth_router
 
 app = FastAPI()
+app.include_router(auth_router)  # 👈 Auth first, to appear at top of docs
+initialize_routes(app)
 
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    # Extract the first error message, or use a default
-    msg = "Invalid input"
-    if exc.errors():
-        msg = exc.errors()[0].get("msg", msg)
-    return JSONResponse(
-        status_code=HTTP_422_UNPROCESSABLE_ENTITY,
-        content={"status_code": 422, "msg": msg},
-    )
+app.include_router(main_router)
+
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 app.add_middleware(
     CORSMiddleware,

@@ -15,6 +15,7 @@ import logging
 from apps.shortener.schemas import ShortenUrlRequest, ShortenUrlResponse, UpdateSlugRequest, UpdateDomainRequest, UpdateSlugAndDomainRequest
 from apps.shortener.models import ShortenedUrl
 from core.config import app_config
+from sqlalchemy.exc import IntegrityError
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -50,7 +51,7 @@ class ShortenerController:
     @staticmethod
     def ensure_http_prefix(url: str) -> str:
         if not url.startswith("http://") and not url.startswith("https://"):
-            return f"http://{url}"
+            return f"https://{url}"
         return url
 
     async def shorten(self, db: AsyncSession, payload: ShortenUrlRequest, redis: Redis) -> ShortenUrlResponse:
@@ -91,6 +92,8 @@ class ShortenerController:
             expires_at=self.utc_to_ist(expires_at).strftime("%Y-%m-%d %H:%M:%S"),
         )
 
+    
+
     async def update_slug(self, db: AsyncSession, payload: UpdateSlugRequest):
         domain = self.normalize_domain(payload.domain)
         result = await db.exec(select(ShortenedUrl).where(
@@ -104,8 +107,18 @@ class ShortenerController:
         record.short_url = payload.new_slug
         record.updated_at = datetime.utcnow()
         db.add(record)
-        await db.commit()
+
+        try:
+            await db.commit()
+        except IntegrityError:
+            await db.rollback()
+            raise HTTPException(
+                status_code=409,
+                detail="Slug already in use for this domain."
+            )
+
         return {"message": "Slug updated successfully."}
+
 
     async def update_domain(self, db: AsyncSession, payload: UpdateDomainRequest):
         result = await db.exec(select(ShortenedUrl).where(
@@ -119,8 +132,18 @@ class ShortenerController:
         record.custom_domain = self.normalize_domain(payload.new_domain)
         record.updated_at = datetime.utcnow()
         db.add(record)
-        await db.commit()
+
+        try:
+            await db.commit()
+        except IntegrityError:
+            await db.rollback()
+            raise HTTPException(
+                status_code=409,
+                detail="Slug already in use for this domain."
+            )
+
         return {"message": "Domain updated successfully."}
+
 
     async def update_slug_and_domain(self, db: AsyncSession, payload: UpdateSlugAndDomainRequest):
         result = await db.exec(select(ShortenedUrl).where(
@@ -135,8 +158,18 @@ class ShortenerController:
         record.custom_domain = self.normalize_domain(payload.new_domain)
         record.updated_at = datetime.utcnow()
         db.add(record)
-        await db.commit()
+
+        try:
+            await db.commit()
+        except IntegrityError:
+            await db.rollback()
+            raise HTTPException(
+                status_code=409,
+                detail="Slug and domain combination already exists."
+            )
+
         return {"message": "Slug and domain updated successfully."}
+
 
     async def redirect_to_main_url(self, db: AsyncSession, redis: Redis, short_url: str, request: Request) -> RedirectResponse | JSONResponse:
         raw_host = request.headers.get("host", "")

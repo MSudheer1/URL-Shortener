@@ -1,5 +1,17 @@
 from typing import Optional
 from pydantic_settings import BaseSettings as PydanticBaseConfig
+import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+load_dotenv(dotenv_path=Path(__file__).resolve().parent.parent / ".env") # Load environment variables from .env file
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+SECRET_KEY = os.getenv("SECRET_KEY", "your-secret-key")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 4320))
+MAILTRAP_USERNAME="d80d3d1084784c"
+MAILTRAP_PASSWORD="870d3baf9c6f12"
 
 
 class BaseConfig(PydanticBaseConfig):

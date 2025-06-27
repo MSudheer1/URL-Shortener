@@ -33,6 +33,28 @@ class ShortenUrlResponse(BaseModel):
     updated_at: str
     expires_at: str
 
+# class UpdateShortUrlRequest(BaseModel):
+#     new_slug: Optional[str] = None
+#     new_domain: Optional[str] = None
+
+#     @field_validator("new_slug")
+#     def validate_new_slug(cls, value: Optional[str]):
+#         if value and not re.match(r"^[a-zA-Z0-9_-]{5,30}$", value):
+#             raise ValueError("Slug must be 5–30 characters and use only a-z, A-Z, 0-9, -, _")
+#         return value
+
+#     @field_validator("new_domain")
+#     def validate_new_domain(cls, value: Optional[str]):
+#         if value:
+#             domain_regex = re.compile(
+#                 r"^(http://|https://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
+#             )
+#             if not domain_regex.match(value):
+#                 raise ValueError("Invalid domain format")
+#         return value
+
+
+
 
 # 🆕 Patch Update Schemas
 

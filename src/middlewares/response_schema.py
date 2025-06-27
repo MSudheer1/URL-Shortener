@@ -2,14 +2,24 @@ import json
 from typing import Callable
 
 from fastapi import Request, FastAPI, status
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from fastapi.encoders import jsonable_encoder
 
 from utils.responses import ResponseStructure
+from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 
 # Optional: Add paths that shouldn't be wrapped by the middleware
 specific_paths = []
 
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    msg = "Invalid input"
+    if exc.errors():
+        msg = exc.errors()[0].get("msg", msg)
+    return JSONResponse(
+        status_code=HTTP_422_UNPROCESSABLE_ENTITY,
+        content={"status_code": 422, "msg": msg},
+    )
 
 def response_schema_middleware(app: FastAPI):
     @app.middleware("http")
