@@ -20,7 +20,7 @@ class ShortenedUrl(BaseModel, table=True):
 
     id: Optional[int] = Field(default=None, primary_key=True)
     main_url: str = Field(nullable=False, description="Original long URL")
-    short_url: str = Field(index=True, nullable=False, description="Unique short code")
+    short_url: str = Field(nullable=False, description="Unique short code")
     custom_domain: Optional[str] = Field(default=None, index=True, description="Custom domain, if provided")
     click_count: int = Field(default=0, nullable=False, description="Total number of redirects")
     max_clicks: Optional[int] = Field(default=None, description="Maximum allowed clicks")
