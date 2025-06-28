@@ -1,4 +1,4 @@
-name: Deploy FastAPI App to EC2 with Docker
+name: Deploy FastAPI App to EC2 without Docker
 
 on:
   push:
@@ -18,19 +18,30 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Deploy to EC2 with Docker
+      - name: Deploy FastAPI to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
-            cd /home/ubuntu
+          echo "Connecting to EC2 instance..."
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
+            sudo apt update
+            sudo apt install -y python3-pip python3-venv curl build-essential libncurses-dev
+
+            cd /home/ubuntu || exit 1
+            sudo lsof -t -i :8000 | xargs sudo kill -9 || true
             rm -rf ShortUrlBackEnd
             git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_PAT }}@github.com/${{ secrets.GH_USERNAME }}/ShortUrlBackEnd.git
-            cd ShortUrlBackEnd
+            cd ShortUrlBackEnd || exit 1
+
+            python3 -m venv venv
+            source venv/bin/activate
+
             echo "${{ secrets.ENV_CONTENT }}" > src/.env
+            export PYTHONPATH=src
 
-            sudo lsof -t -i :8000 | xargs sudo kill -9 || true
-            docker stop fastapi-app || true
-            docker rm fastapi-app || true
+            pip install --upgrade pip
+            pip install poetry
+            poetry config virtualenvs.create false
+            poetry install --no-cache --no-root
 
-            docker build -t fastapi-app .
-            docker run -d --restart unless-stopped --name fastapi-app -p 8000:8000 fastapi-app
+            nohup poetry run uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > uvicorn.log 2>&1 &
+            echo "FastAPI application started."
           EOF
