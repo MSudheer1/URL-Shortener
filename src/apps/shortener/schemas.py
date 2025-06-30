@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, Field
 from typing import Optional
 import re
 
@@ -33,6 +33,29 @@ class ShortenUrlResponse(BaseModel):
     updated_at: str
     expires_at: str
 
+
+class UpdateShortenedUrlRequest(BaseModel):
+    old_domain: str = Field(..., description="Current domain of the shortened URL")
+    new_slug: Optional[str] = Field(None, description="New slug (short code)")
+    new_domain: Optional[str] = Field(None, description="New domain")
+
+    @field_validator("new_slug")
+    def validate_new_slug(cls, value: Optional[str]):
+        if value and not re.match(r"^[a-zA-Z0-9_-]{5,30}$", value):
+            raise ValueError("Slug must be 5–30 characters and use only a-z, A-Z, 0-9, -, _")
+        return value
+
+    @field_validator("new_domain")
+    def validate_new_domain(cls, value: Optional[str]):
+        if value:
+            domain_regex = re.compile(
+                r"^(http://|https://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
+            )
+            if not domain_regex.match(value):
+                raise ValueError("Invalid domain format")
+        return value
+
+
 # class UpdateShortUrlRequest(BaseModel):
 #     new_slug: Optional[str] = None
 #     new_domain: Optional[str] = None
@@ -58,50 +81,50 @@ class ShortenUrlResponse(BaseModel):
 
 # 🆕 Patch Update Schemas
 
-class UpdateSlugRequest(BaseModel):
-    old_slug: str
-    new_slug: str
-    domain: Optional[str] = ""
+# class UpdateSlugRequest(BaseModel):
+#     old_slug: str
+#     new_slug: str
+#     domain: Optional[str] = ""
 
-    @field_validator("new_slug")
-    def validate_new_slug(cls, value: str):
-        if not re.match(r"^[a-zA-Z0-9_-]{5,30}$", value):
-            raise ValueError("New slug must be 5–30 characters and use only a-z, A-Z, 0-9, -, _")
-        return value
-
-
-class UpdateDomainRequest(BaseModel):
-    slug: str
-    old_domain: Optional[str] = ""
-    new_domain: str
-
-    @field_validator("new_domain")
-    def validate_new_domain(cls, value: str):
-        domain_regex = re.compile(
-            r"^(http://|https://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
-        )
-        if not domain_regex.match(value):
-            raise ValueError("Invalid new domain format")
-        return value
+#     @field_validator("new_slug")
+#     def validate_new_slug(cls, value: str):
+#         if not re.match(r"^[a-zA-Z0-9_-]{5,30}$", value):
+#             raise ValueError("New slug must be 5–30 characters and use only a-z, A-Z, 0-9, -, _")
+#         return value
 
 
-class UpdateSlugAndDomainRequest(BaseModel):
-    old_slug: str
-    old_domain: Optional[str] = ""
-    new_slug: str
-    new_domain: str
+# class UpdateDomainRequest(BaseModel):
+#     slug: str
+#     old_domain: Optional[str] = ""
+#     new_domain: str
 
-    @field_validator("new_slug")
-    def validate_new_slug(cls, value: str):
-        if not re.match(r"^[a-zA-Z0-9_-]{5,30}$", value):
-            raise ValueError("New slug must be 5–30 characters and use only a-z, A-Z, 0-9, -, _")
-        return value
+#     @field_validator("new_domain")
+#     def validate_new_domain(cls, value: str):
+#         domain_regex = re.compile(
+#             r"^(http://|https://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
+#         )
+#         if not domain_regex.match(value):
+#             raise ValueError("Invalid new domain format")
+#         return value
 
-    @field_validator("new_domain")
-    def validate_new_domain(cls, value: str):
-        domain_regex = re.compile(
-            r"^(http://|https://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
-        )
-        if not domain_regex.match(value):
-            raise ValueError("Invalid new domain format")
-        return value
+
+# class UpdateSlugAndDomainRequest(BaseModel):
+#     old_slug: str
+#     old_domain: Optional[str] = ""
+#     new_slug: str
+#     new_domain: str
+
+#     @field_validator("new_slug")
+#     def validate_new_slug(cls, value: str):
+#         if not re.match(r"^[a-zA-Z0-9_-]{5,30}$", value):
+#             raise ValueError("New slug must be 5–30 characters and use only a-z, A-Z, 0-9, -, _")
+#         return value
+
+#     @field_validator("new_domain")
+#     def validate_new_domain(cls, value: str):
+#         domain_regex = re.compile(
+#             r"^(http://|https://)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$"
+#         )
+#         if not domain_regex.match(value):
+#             raise ValueError("Invalid new domain format")
+#         return value

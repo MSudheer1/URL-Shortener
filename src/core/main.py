@@ -1,7 +1,7 @@
 from fastapi import FastAPI,Depends, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-
+from services.scheduler import start_scheduler
 from core import events
 from core.router import initialize_routes
 
@@ -14,6 +14,8 @@ from core.router import main_router
 from core.auth import auth_router
 
 app = FastAPI()
+
+
 app.include_router(auth_router)  # 👈 Auth first, to appear at top of docs
 initialize_routes(app)
 
@@ -39,6 +41,7 @@ response_schema_middleware(app)
 @app.on_event("startup")
 async def startup() -> None:
     await events.startup_event_handler()
+    start_scheduler() # Starts your background cleanup scheduler
 
 
 @app.on_event("shutdown")
