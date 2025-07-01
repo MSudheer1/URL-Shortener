@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from core.config import database_config
-
+from sqlalchemy.orm import declarative_base
 
 engine = create_async_engine(
     url=database_config.database_url,
@@ -13,6 +13,7 @@ engine = create_async_engine(
     max_overflow=database_config.max_overflow,
 )
 
+Base = declarative_base()
 
 async def get_session() -> AsyncSession:
     session = sessionmaker(  # noqa

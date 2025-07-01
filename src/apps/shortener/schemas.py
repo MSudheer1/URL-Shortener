@@ -55,6 +55,44 @@ class UpdateShortenedUrlRequest(BaseModel):
                 raise ValueError("Invalid domain format")
         return value
 
+class CampaignSourceCreate(BaseModel):
+    user_id: str
+    campaign_source_tag: str
+    campaign_source_name: str
+
+# -------- Campaign Medium --------
+class CampaignMediumCreate(BaseModel):
+    user_id: str
+    campaign_medium_tag: str
+    campaign_medium_name: str
+
+# -------- Campaign Name --------
+class CampaignNameCreate(BaseModel):
+    user_id: str
+    campaign_name_tag: str
+    campaign_name: str
+
+
+# -------- Update Campaign Source --------
+class CampaignSourceUpdate(BaseModel):
+    campaign_source_tag: Optional[str] = None
+    campaign_source_name: Optional[str] = None
+
+
+# -------- Update Campaign Medium --------
+class CampaignMediumUpdate(BaseModel):
+    campaign_medium_tag: Optional[str] = None
+    campaign_medium_name: Optional[str] = None
+
+# -------- Update Campaign Name --------
+class CampaignNameUpdate(BaseModel):
+    campaign_name_tag: Optional[str] = None
+    campaign_name: Optional[str] = None
+
+# # -------- UTM URL Builder --------
+# class UTMBuildRequest(BaseModel):
+#     main_url: str
+#     user_id: str
 
 # class UpdateShortUrlRequest(BaseModel):
 #     new_slug: Optional[str] = None

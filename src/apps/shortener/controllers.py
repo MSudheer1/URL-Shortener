@@ -18,10 +18,15 @@ from apps.shortener.models import ShortenedUrl
 from core.config import app_config
 from sqlalchemy.exc import IntegrityError
 
+from services.visit_service import visit_service
+
 logger = logging.getLogger("uvicorn.error")
 
 class ShortenerController:
     MAX_CACHE_TTL = 30 * 24 * 60 * 60
+
+    def __init__(self):
+        pass
 
     @staticmethod
     def generate_random_characters(length: int) -> str:
@@ -285,6 +290,14 @@ class ShortenerController:
 
         user_agent = request.headers.get("user-agent", "").lower()
         accept = request.headers.get("accept", "").lower()
+
+        await visit_service.log_visit(
+            db=db,
+            request=request,
+            short_code=shortened_url.short_url
+        )
+        
+
         if "swagger" in user_agent or "json" in accept:
             return JSONResponse(
                 status_code=200,

@@ -1,7 +1,8 @@
-from sqlmodel import Field, SQLModel, UniqueConstraint
+from sqlmodel import Column, DateTime, Field, SQLModel, UniqueConstraint, func
 from datetime import datetime
 from typing import Optional
 from utils.common_models import BaseModel
+from sqlalchemy.orm import declarative_base
 
 
 class User(SQLModel, table=True):
@@ -29,3 +30,85 @@ class ShortenedUrl(BaseModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     expires_at: Optional[datetime] = Field(default=None, description="Expiry time of the short link")
+
+
+class VisitLog(SQLModel, table=True):
+    __table_args__ = {"extend_existing": True}
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    short_url: str = Field(nullable=False)
+    client_ip: str = Field(nullable=False)
+    system_id: Optional[str] = None
+    city: Optional[str] = None
+    country: Optional[str] = None
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    device: Optional[str] = None
+    os: Optional[str] = None
+    browser: Optional[str] = None
+    visited_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
+    created_at: Optional[datetime] = Field(default_factory=datetime.utcnow, nullable=False)
+
+Base = declarative_base()
+
+
+#-----------------------------Campaign Model-----------------------#
+
+class CampaignSource(SQLModel, table=True):
+    __table_args__ = (
+        UniqueConstraint("user_id", "campaign_source_tag", name="uq_source_user_tag"),
+    )
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    unique_id: str = Field(max_length=6, index=True)
+    user_id: str = Field(index=True)
+    campaign_source_tag: str
+    campaign_source_name: str
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column=Column(DateTime, server_default=func.now())
+    )
+    updated_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column=Column(DateTime, server_default=func.now(), onupdate=func.now())
+    )
+
+
+class CampaignMedium(SQLModel, table=True):
+    __table_args__ = (
+        UniqueConstraint("user_id", "campaign_medium_tag", name="uq_medium_user_tag"),
+    )
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    unique_id: str = Field(max_length=6, index=True, nullable=False)
+    user_id: str = Field(index=True, nullable=False)
+    campaign_medium_tag: str = Field(nullable=False)
+    campaign_medium_name: str = Field(nullable=False)
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column_kwargs={"server_default": func.now()}
+    )
+    updated_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column_kwargs={"server_default": func.now(), "onupdate": func.now()}
+    )
+
+
+class CampaignName(SQLModel, table=True):
+    __table_args__ = (
+        UniqueConstraint("user_id", "campaign_name_tag", name="uq_name_user_tag"),
+    )
+
+    id: Optional[int] = Field(default=None, primary_key=True)
+    unique_id: str = Field(max_length=6, index=True, nullable=False)
+    user_id: str = Field(index=True, nullable=False)
+    campaign_name_tag: str = Field(nullable=False)
+    campaign_name: str = Field(nullable=False)
+    created_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column_kwargs={"server_default": func.now()}
+    )
+    updated_at: datetime = Field(
+        default_factory=datetime.utcnow,
+        sa_column_kwargs={"server_default": func.now(), "onupdate": func.now()}
+    )
