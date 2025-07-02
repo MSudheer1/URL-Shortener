@@ -14,6 +14,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from core.router import main_router
 from core.auth import auth_router
 from apps.shortener.apis import shortener_router,campaign_router
+import platform
+import psutil
+import uuid
 
 app = FastAPI()
 
@@ -73,5 +76,21 @@ async def shutdown_event() -> None:
 def ping():
     return "pong!"
 
+def get_system_info():
+    print("[System Info] Fetching system information")
+    return {
+        "Device Name": platform.node(),
+        "Processor": platform.processor(),
+        "Architecture": platform.architecture()[0],
+        "RAM (GB)": round(psutil.virtual_memory().total / (1024 ** 3), 2),
+        "System Type": platform.machine(),
+        "OS": f"{platform.system()} {platform.release()}",
+        "Device ID": hex(uuid.getnode())
+    }
+ 
+@app.get("/system-info")
+def get_info():
+    print("[System Info] Fetching system information")
+    return get_system_info()
 
 initialize_routes(app=app)

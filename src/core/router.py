@@ -9,7 +9,5 @@ main_router = APIRouter()
 def initialize_routes(app: FastAPI):
     main_router.include_router(auth_router)
     main_router.include_router(shortener_router)
-    app.include_router(campaign_router)
+    app.include_router(campaign_router) 
     app.include_router(main_router)
-    # app.include_router(shortener_router)
-    # app.include_router(auth_router)
