@@ -26,6 +26,7 @@ from apps.shortener.schemas import (
     CampaignSourceUpdate,
     ShortenUrlRequest,
     ShortenUrlResponse,
+    UpdateDestinationRequest,
     UpdateShortenedUrlRequest,
 )
 from apps.shortener.models import ShortenedUrl, User
@@ -96,6 +97,7 @@ async def shorten(
         db=db,
         redis=redis,
         payload=payload,
+        current_user=current_user
     )
 
     user.url_limit -= 1
@@ -168,32 +170,40 @@ async def redirect_to_main_url(
 async def update_short_url(
     short_code: str = Path(..., description="Existing short code"),
     payload: UpdateShortenedUrlRequest = Body(...),
-    db=Depends(get_session),
-    redis=Depends(get_redis)
+    db: AsyncSession = Depends(get_session),
+    redis: Redis = Depends(get_redis),
+    current_user: str = Depends(get_current_user)  
 ):
     return await shortener_controller.update_short_url(
         db=db,
         short_code=short_code,
         payload=payload,
-        redis=redis
+        redis=redis,
+        user_email=current_user  
     )
-
 
 @shortener_router.delete("/shorten/{short_code}")
 async def delete_short_url(
     short_code: str,
     domain: Optional[str] = Query(None),
     db: AsyncSession = Depends(get_session),
-    redis: Redis = Depends(get_redis)
+    redis: Redis = Depends(get_redis),
+    current_user: str = Depends(get_current_user)  # ✅ Ownership check added
 ):
     normalized_domain = shortener_controller.normalize_domain(domain or "")
+
     result = await db.exec(select(ShortenedUrl).where(
         ShortenedUrl.short_url == short_code,
         ShortenedUrl.custom_domain == normalized_domain
     ))
     record = result.first()
+
     if not record:
         raise HTTPException(status_code=404, detail="Shortened URL not found")
+
+
+    if record.owner_email != current_user:
+        raise HTTPException(status_code=403, detail="You do not have permission to delete this URL")
 
     redis_key = shortener_controller.build_redis_key(normalized_domain, short_code)
 
@@ -203,6 +213,24 @@ async def delete_short_url(
 
     return {"message": "Shortened URL deleted successfully"}
 
+
+@shortener_router.patch("/shorten/{short_code}/destination")
+async def update_main_url(
+    short_code: str,
+    domain: Optional[str] = Query(None),
+    payload: UpdateDestinationRequest = Body(...),
+    db: AsyncSession = Depends(get_session),
+    redis: Redis = Depends(get_redis),
+    current_user: str = Depends(get_current_user)
+):
+    return await shortener_controller.update_main_url(
+        db=db,
+        redis=redis,
+        short_code=short_code,
+        payload=payload,
+        user_email=current_user,
+        domain=domain
+    )
 
 @shortener_router.get("/analytics/{short_code}",
     responses={
@@ -244,6 +272,7 @@ async def get_click_count(
         "domain": normalized_domain,
         "clicks": url.click_count
     }
+
 
 # --- Visit Logs by Client IP API ---
 @shortener_router.get("/visitlogs/client/{client_ip}")

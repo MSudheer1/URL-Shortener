@@ -4,7 +4,7 @@ import string
 from datetime import datetime, timedelta
 from typing import Optional
 
-from fastapi import Request, HTTPException, status
+from fastapi import Request, HTTPException
 from fastapi.responses import RedirectResponse, JSONResponse
 
 from redis.asyncio import Redis
@@ -13,14 +13,26 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 import pytz
 import logging
 
-from apps.shortener.schemas import ShortenUrlRequest, ShortenUrlResponse, UpdateShortenedUrlRequest
-from apps.shortener.models import ShortenedUrl
+from apps.shortener.schemas import (
+    ShortenUrlRequest,
+    ShortenUrlResponse,
+    UpdateDestinationRequest,
+    UpdateShortenedUrlRequest,
+)
+from apps.shortener.models import ShortenedUrl, User
 from core.config import app_config
 from sqlalchemy.exc import IntegrityError
 
 from services.visit_service import visit_service
+from utils.validators import (
+    add_http_prefix,
+    validate_http_url,
+    validate_slug,
+    validate_domain,
+)
 
 logger = logging.getLogger("uvicorn.error")
+
 
 class ShortenerController:
     MAX_CACHE_TTL = 30 * 24 * 60 * 60
@@ -60,8 +72,23 @@ class ShortenerController:
             return f"https://{url}"
         return url
 
-    async def shorten(self, db: AsyncSession, payload: ShortenUrlRequest, redis: Redis) -> ShortenUrlResponse:
+    # ✅ Added: permission helper
+    @staticmethod
+    def _ensure_owner_permission(record: ShortenedUrl, user_email: str):
+        if record.owner_email != user_email:
+            raise HTTPException(status_code=403, detail="You do not have permission to modify this URL")
+
+    async def shorten(
+        self,
+        db: AsyncSession,
+        payload: ShortenUrlRequest,
+        redis: Redis,
+        current_user: str
+    ) -> ShortenUrlResponse:
         domain = self.normalize_domain(app_config.default_domain)
+
+        payload.main_url = add_http_prefix(payload.main_url)
+        validate_http_url(payload.main_url)
 
         while True:
             short_url = self.generate_random_characters(length=5)
@@ -76,6 +103,11 @@ class ShortenerController:
         now = datetime.utcnow()
         expires_at = now + timedelta(hours=1)
 
+        user_result = await db.exec(select(User).where(User.email == current_user))
+        user = user_result.first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
         shortened_url = ShortenedUrl(
             main_url=payload.main_url,
             short_url=short_url,
@@ -83,7 +115,8 @@ class ShortenerController:
             max_clicks=max_clicks,
             created_at=now,
             updated_at=now,
-            expires_at=expires_at
+            expires_at=expires_at,
+            owner_email=current_user
         )
         db.add(shortened_url)
         await db.commit()
@@ -104,7 +137,6 @@ class ShortenerController:
         short_url: str,
         domain: str
     ) -> ShortenedUrl:
-        """Fetch URL record based on short_url and domain, raise 404 if not found."""
         domain = self.normalize_domain(domain)
         result = await db.exec(
             select(ShortenedUrl).where(
@@ -116,19 +148,27 @@ class ShortenerController:
         if not record:
             raise HTTPException(status_code=404, detail="Record not found.")
         return record
-    
+
     async def update_short_url(
         self,
         db: AsyncSession,
         short_code: str,
         payload: UpdateShortenedUrlRequest,
         redis: Redis,
+        user_email: str  # ✅ Added user_email param
     ):
         old_domain = self.normalize_domain(payload.old_domain)
         record = await self._get_record_and_validate(db, short_code, old_domain)
 
+        self._ensure_owner_permission(record, user_email)  # ✅ Owner check
+
         new_slug = payload.new_slug or short_code
         new_domain = self.normalize_domain(payload.new_domain) if payload.new_domain else old_domain
+
+        if payload.new_slug:
+            validate_slug(payload.new_slug)
+        if payload.new_domain:
+            validate_domain(payload.new_domain)
 
         old_key = self.build_redis_key(old_domain, short_code)
         new_key = self.build_redis_key(new_domain, new_slug)
@@ -156,7 +196,14 @@ class ShortenerController:
             "new_domain": new_domain,
         }
 
-    async def redirect_to_main_url(self, db: AsyncSession, redis: Redis, short_url: str, request: Request, domain: Optional[str]) -> RedirectResponse | JSONResponse:
+    async def redirect_to_main_url(
+        self,
+        db: AsyncSession,
+        redis: Redis,
+        short_url: str,
+        request: Request,
+        domain: Optional[str]
+    ) -> RedirectResponse | JSONResponse:
         if domain:
             domain = self.normalize_domain(domain)
         else:
@@ -164,10 +211,6 @@ class ShortenerController:
             domain = self.normalize_domain(raw_host)
 
         redis_key = self.build_redis_key(domain, short_url)
-
-        # cached_url = await redis.get(redis_key)
-        # if cached_url:
-        #     return RedirectResponse(url=cached_url, status_code=302)
 
         result = await db.exec(select(ShortenedUrl).where(
             ShortenedUrl.short_url == short_url,
@@ -179,22 +222,19 @@ class ShortenerController:
             raise HTTPException(status_code=404, detail="Shortened URL not found")
 
         now = datetime.utcnow()
-         
-        # Check for expiry by click count
+
         if shortened_url.max_clicks and shortened_url.click_count >= shortened_url.max_clicks:
             await db.delete(shortened_url)
             await db.commit()
             await redis.delete(redis_key)
             raise HTTPException(status_code=404, detail="Shortened URL expired. Please upgrade to premium.")
 
-        # Check for expiry by time
         if shortened_url.expires_at and shortened_url.expires_at < now:
             await db.delete(shortened_url)
             await db.commit()
             await redis.delete(redis_key)
             raise HTTPException(status_code=404, detail="Shortened URL expired. Please upgrade to premium.")
-        
-        # Increment click count
+
         shortened_url.click_count += 1
         shortened_url.updated_at = now
         db.add(shortened_url)
@@ -205,7 +245,6 @@ class ShortenerController:
             ttl = min(ttl, self.MAX_CACHE_TTL)
             if ttl > 0:
                 await redis.set(redis_key, shortened_url.main_url, ex=ttl)
-                print(f"TTL for Redis key {redis_key} is {ttl} seconds")
 
         user_agent = request.headers.get("user-agent", "").lower()
         accept = request.headers.get("accept", "").lower()
@@ -215,7 +254,6 @@ class ShortenerController:
             request=request,
             short_code=shortened_url.short_url
         )
-        
 
         if "swagger" in user_agent or "json" in accept:
             return JSONResponse(
@@ -230,7 +268,39 @@ class ShortenerController:
                     "status_code": 200
                 }
             )
-        # Perform actual redirection for browser
+
         return RedirectResponse(url=shortened_url.main_url, status_code=302)
 
+    async def update_main_url(
+        self,
+        db: AsyncSession,
+        redis: Redis,
+        short_code: str,
+        domain: Optional[str],
+        payload: UpdateDestinationRequest,
+        user_email: str
+    ):
+        domain = self.normalize_domain(domain)
+        validate_http_url(str(payload.new_url))
+
+        record = await self._get_record_and_validate(db, short_code, domain)
+
+        self._ensure_owner_permission(record, user_email)  # ✅ Owner check
+
+        record.main_url = str(payload.new_url)
+        record.updated_at = datetime.utcnow()
+
+        db.add(record)
+        try:
+            await db.commit()
+            redis_key = self.build_redis_key(domain, short_code)
+            await redis.set(redis_key, str(payload.new_url), ex=self.MAX_CACHE_TTL)
+        except Exception:
+            await db.rollback()
+            raise HTTPException(status_code=500, detail="Failed to update main URL")
+
+        return {"message": "Main URL updated successfully"}
+
+
+# ✅ Create instance
 shortener_controller = ShortenerController()

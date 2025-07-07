@@ -30,7 +30,7 @@ class ShortenedUrl(BaseModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     updated_at: datetime = Field(default_factory=datetime.utcnow, nullable=False)
     expires_at: Optional[datetime] = Field(default=None, description="Expiry time of the short link")
-
+    owner_email: Optional[str] = Field(default=None, index=True, description="Email of the user who owns this short URL")
 
 class VisitLog(SQLModel, table=True):
     __table_args__ = {"extend_existing": True}

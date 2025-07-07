@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Callable
 
 from fastapi import Request, FastAPI, status
@@ -12,6 +13,17 @@ from starlette.status import HTTP_422_UNPROCESSABLE_ENTITY
 # Optional: Add paths that shouldn't be wrapped by the middleware
 specific_paths = []
 
+
+# ✅ Global exception handler
+async def global_exception_handler(request: Request, exc: Exception):
+    logging.error(f"Unhandled error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"status_code": 500, "msg": "Internal Server Error", "error": str(exc)},
+    )
+
+
+# ✅ Request validation handler
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
     msg = "Invalid input"
     if exc.errors():
@@ -21,12 +33,13 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"status_code": 422, "msg": msg},
     )
 
+
+# ✅ Response schema middleware
 def response_schema_middleware(app: FastAPI):
     @app.middleware("http")
     async def wrap_response(request: Request, call_next: Callable):
         response = await call_next(request)
 
-        # Skip middleware for FastAPI docs or excluded paths
         if request.url.path in [
             app.docs_url,
             app.openapi_url,
@@ -36,11 +49,9 @@ def response_schema_middleware(app: FastAPI):
         ]:
             return response
 
-        # Don't wrap 3xx redirects or error responses
         if status.HTTP_300_MULTIPLE_CHOICES <= response.status_code < status.HTTP_400_BAD_REQUEST:
             return response
 
-        # Collect response body content (only once!)
         body_chunks = [chunk async for chunk in response.body_iterator]
         full_body = b"".join(body_chunks)
 
@@ -56,7 +67,6 @@ def response_schema_middleware(app: FastAPI):
         headers = dict(response.headers)
         headers.pop("content-length", None)
 
-        # If response is JSON, wrap it in ResponseStructure
         if content_type.startswith("application/json"):
             try:
                 json_body = json.loads(full_body.decode())
@@ -70,7 +80,6 @@ def response_schema_middleware(app: FastAPI):
                     headers=headers,
                 )
             except json.JSONDecodeError:
-                # Not a valid JSON, fallback to original
                 return Response(
                     content=full_body,
                     status_code=response.status_code,
@@ -78,7 +87,6 @@ def response_schema_middleware(app: FastAPI):
                     media_type=response.media_type,
                 )
         else:
-            # For non-JSON (e.g., HTML, plain text, etc.), just return as-is
             return Response(
                 content=full_body,
                 status_code=response.status_code,
