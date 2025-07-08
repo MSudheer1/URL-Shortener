@@ -16,7 +16,7 @@ jobs:
       - name: Set up SSH for EC2
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+          ssh-private-key: ${{ secrets.PROD_EC2_SSH_KEY }}
 
       - name: Deploy FastAPI to EC2
         run: |
@@ -34,7 +34,7 @@ jobs:
             python3 -m venv venv
             source venv/bin/activate
 
-            echo "${{ secrets.ENV_CONTENT }}" > src/.env
+            echo "${{ secrets.PROD_ENV_CONTENT }}" > src/.env
             export PYTHONPATH=src
 
             pip install --upgrade pip
