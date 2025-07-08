@@ -1,5 +1,6 @@
-from typing import Optional
-
+from typing import Optional, List
+import csv
+from io import StringIO
 from fastapi import (
     APIRouter,
     Depends,
@@ -8,6 +9,8 @@ from fastapi import (
     Query,
     Request,
     status,
+    UploadFile,
+    File,
 )
 from fastapi.params import Body
 from fastapi.responses import JSONResponse, RedirectResponse
@@ -194,7 +197,7 @@ async def delete_short_url(
     domain: Optional[str] = Query(None),
     db: AsyncSession = Depends(get_session),
     redis: Redis = Depends(get_redis),
-    current_user: str = Depends(get_current_user)  # ✅ Ownership check added
+    current_user: str = Depends(get_current_user) 
 ):
     normalized_domain = shortener_controller.normalize_domain(domain or "")
 
@@ -256,6 +259,51 @@ async def update_url_settings(
         payload=payload,
         user_email=current_user
     )
+
+
+@shortener_router.post("/bulk-shorten")
+async def bulk_shorten_urls(
+    file: UploadFile = File(...),
+    db: AsyncSession = Depends(get_session),
+    redis: Redis = Depends(get_redis),
+    current_user: str = Depends(get_current_user),
+):
+    content = await file.read()
+    decoded = content.decode("utf-8")
+    csv_reader = csv.DictReader(StringIO(decoded))
+
+    results = []
+
+    for idx, row in enumerate(csv_reader, start=1):
+        try:
+            payload = ShortenUrlRequest(
+                main_url=row.get("main_url", "").strip(),
+                password=row.get("password") or None,
+                expiry=row.get("expiry") or None,
+                max_clicks=int(row.get("max_clicks")) if row.get("max_clicks") else None
+            )
+
+            result = await shortener_controller.shorten(
+                db=db,
+                payload=payload,
+                redis=redis,
+                current_user=current_user
+            )
+
+            results.append({
+                "row": idx,
+                "short_url": result.short_url,
+                "status": "success"
+            })
+
+        except Exception as e:
+            results.append({
+                "row": idx,
+                "error": str(e),
+                "status": "failed"
+            })
+
+    return {"results": results}
 
 
 @shortener_router.get("/analytics/{short_code}",
