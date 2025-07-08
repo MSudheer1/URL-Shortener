@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker, Session
 from typing import Generator
 
 # Database connection string
-DATABASE_URL = "postgresql://postgres:admin@localhost:5432/url_shortener"
+DATABASE_URL = "postgresql://postgres:8RA2G2dz8HwSU8XMO8jm@shorturl.cna4skywce30.ap-south-1.rds.amazonaws.com:5432/url-shortner"
 
 # Create engine and session factory
 engine = create_engine(DATABASE_URL, echo=True)
