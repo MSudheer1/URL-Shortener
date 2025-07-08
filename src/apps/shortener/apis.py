@@ -28,6 +28,7 @@ from apps.shortener.schemas import (
     ShortenUrlResponse,
     UpdateDestinationRequest,
     UpdateShortenedUrlRequest,
+    UpdateUrlSettingsRequest,
 )
 from apps.shortener.models import ShortenedUrl, User
 from apps.shortener.controllers import shortener_controller
@@ -46,7 +47,7 @@ shortener_router = APIRouter(
 )
 
 campaign_router = APIRouter(
-    tags=["Campaign"],  # 👈 this controls the heading in Swagger UI
+    tags=["Campaign"],
     prefix="/campaign"
 )
 
@@ -128,13 +129,15 @@ async def shorten(
             },
         },
         302: {"description": "Redirect to the original URL"},
+        401: {"description": "Unauthorized (password required or incorrect)"},
         404: {"description": "Shortened URL not found or expired"},
     },
 )
 async def redirect_to_main_url(
     short_code: str,
     request: Request,
-    domain: Optional[str] = None,
+    domain: Optional[str] = Query(None, description="Custom domain if applicable"),
+    password: Optional[str] = Query(None, description="Password if link is protected"),
     db: AsyncSession = Depends(get_session),
     redis: Redis = Depends(get_redis),
 ):
@@ -143,7 +146,8 @@ async def redirect_to_main_url(
         redis=redis,
         short_url=short_code,
         request=request,
-        domain=domain
+        domain=domain,
+        password=password  
     )
 
     user_agent = request.headers.get("user-agent", "").lower()
@@ -164,7 +168,9 @@ async def redirect_to_main_url(
                 }
             )
         return response
+
     return response
+
 
 @shortener_router.patch("/shorten/{short_code}")
 async def update_short_url(
@@ -231,6 +237,26 @@ async def update_main_url(
         user_email=current_user,
         domain=domain
     )
+
+
+@shortener_router.patch("/shorten/{short_code}/settings")
+async def update_url_settings(
+    short_code: str,
+    domain: Optional[str] = Query(None),
+    payload: UpdateUrlSettingsRequest = Body(...),
+    db: AsyncSession = Depends(get_session),
+    redis: Redis = Depends(get_redis),
+    current_user: str = Depends(get_current_user),
+):
+    return await shortener_controller.update_url_settings(
+        db=db,
+        redis=redis,
+        short_code=short_code,
+        domain=domain,
+        payload=payload,
+        user_email=current_user
+    )
+
 
 @shortener_router.get("/analytics/{short_code}",
     responses={

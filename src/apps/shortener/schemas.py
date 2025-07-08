@@ -12,6 +12,7 @@ from utils.validators import (
 
 class ShortenUrlRequest(BaseModel):
     main_url: str
+    password: Optional[str] = None
 
     @field_validator("main_url", mode="before")
     def add_prefix(cls, value: str):
@@ -49,6 +50,11 @@ class UpdateShortenedUrlRequest(BaseModel):
 class UpdateDestinationRequest(BaseModel):
     new_url: HttpUrl
 
+
+class UpdateUrlSettingsRequest(BaseModel):
+    expiry: Optional[str] = Field(None, description="Expiry duration like '30m', '2h', '1d', '1w', '1mo', '1y'")
+    max_clicks: Optional[int] = Field(None, gt=0, description="Maximum allowed clicks before link expires")
+    password: Optional[str] = Field(default=None, description="Optional password to protect access to the shortened URL. Set to empty string ('') to remove existing password.")
 
 # ---------- Campaign Models ----------
 class CampaignSourceCreate(BaseModel):
