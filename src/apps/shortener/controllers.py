@@ -1,18 +1,13 @@
-import random
-import re
-import string
+import logging
+import bcrypt
 from datetime import datetime, timedelta
 from typing import Optional
 
 from fastapi import Request, HTTPException
 from fastapi.responses import RedirectResponse, JSONResponse
-
 from redis.asyncio import Redis
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
-import pytz
-import logging
-import bcrypt
 
 from apps.shortener.schemas import (
     ShortenUrlRequest,
@@ -23,15 +18,9 @@ from apps.shortener.schemas import (
 )
 from apps.shortener.models import ShortenedUrl, User
 from core.config import app_config
-from sqlalchemy.exc import IntegrityError
-
 from services.visit_service import visit_service
-from utils.validators import (
-    add_http_prefix,
-    validate_http_url,
-    validate_slug,
-    validate_domain,
-)
+from sqlalchemy.exc import IntegrityError
+from utils.validators import Validator
 
 logger = logging.getLogger("uvicorn.error")
 
@@ -41,98 +30,44 @@ class ShortenerController:
     MAX_ATTEMPTS = 3
     BLOCK_TIME_SECONDS = 600  # 10 minutes
 
-
     def __init__(self):
         pass
-    
-    
-    @staticmethod
-    def validate_password_strength(password: str):
-        if len(password) < 8:
-            raise HTTPException(status_code=400, detail="Password must be at least 8 characters long.")
-        if not re.search(r"[A-Z]", password):
-            raise HTTPException(status_code=400, detail="Password must contain at least one uppercase letter.")
-        if not re.search(r"[a-z]", password):
-            raise HTTPException(status_code=400, detail="Password must contain at least one lowercase letter.")
-        if not re.search(r"\d", password):
-            raise HTTPException(status_code=400, detail="Password must contain at least one digit.")
-        if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", password):
-            raise HTTPException(status_code=400, detail="Password must contain at least one special character.")
-
-    @staticmethod
-    def parse_duration_string(duration_str: str) -> timedelta:
-        match = re.match(r"^(\d+)([mhdwy])$", duration_str)
-        if not match:
-            raise HTTPException(status_code=400, detail="Invalid expiry format")
-        value, unit = int(match[1]), match[2]
-        if unit == "m": return timedelta(minutes=value)
-        if unit == "h": return timedelta(hours=value)
-        if unit == "d": return timedelta(days=value)
-        if unit == "w": return timedelta(weeks=value)
-        if unit == "y": return timedelta(days=365 * value)
-        raise HTTPException(status_code=400, detail="Unsupported expiry format")
-
-    @staticmethod
-    def generate_random_characters(length: int) -> str:
-        if length < 2:
-            raise ValueError("Length must be at least 2 to include both letter and digit.")
-        char_set = string.ascii_letters + string.digits
-        code = [random.choice(string.ascii_letters), random.choice(string.digits)]
-        code += [random.choice(char_set) for _ in range(length - 2)]
-        random.shuffle(code)
-        return ''.join(code)
-
-    @staticmethod
-    def utc_to_ist(utc_dt):
-        ist = pytz.timezone("Asia/Kolkata")
-        if utc_dt.tzinfo is None:
-            utc_dt = pytz.utc.localize(utc_dt)
-        return utc_dt.astimezone(ist)
-
-    @staticmethod
-    def build_redis_key(domain: str, short_code: str) -> str:
-        clean_domain = domain.replace("http://", "").replace("https://", "").rstrip("/").lower()
-        return f"{clean_domain}:{short_code}"
-
-    @staticmethod
-    def normalize_domain(domain: str) -> str:
-        return domain.replace("http://", "").replace("https://", "").split(":")[0].strip().lower()
-
-    @staticmethod
-    def ensure_http_prefix(url: str) -> str:
-        if not url.startswith("http://") and not url.startswith("https://"):
-            return f"https://{url}"
-        return url
-
-    @staticmethod
-    def _ensure_owner_permission(record: ShortenedUrl, user_email: str):
-        if record.owner_email != user_email:
-            raise HTTPException(status_code=403, detail="You do not have permission to modify this URL")
 
     async def shorten(
         self,
         db: AsyncSession,
         payload: ShortenUrlRequest,
         redis: Redis,
-        current_user: str
+        current_user: str,
+        max_clicks: Optional[int] = 5,
+        expiry: Optional[str] = "1h"
     ) -> ShortenUrlResponse:
-        domain = self.normalize_domain(app_config.default_domain)
+        if payload.custom_domain:
+            Validator.validate_domain(payload.custom_domain)
 
-        payload.main_url = add_http_prefix(payload.main_url)
-        validate_http_url(payload.main_url)
+        domain = Validator.normalize_domain(payload.custom_domain or app_config.default_domain)
+        short_url = payload.custom_slug or Validator.generate_random_characters(length=5)
+
+        if payload.custom_slug:
+            Validator.validate_slug(payload.custom_slug)
 
         while True:
-            short_url = self.generate_random_characters(length=5)
             result = await db.exec(select(ShortenedUrl).where(
                 ShortenedUrl.short_url == short_url,
                 ShortenedUrl.custom_domain == domain
             ))
             if not result.first():
                 break
+            if not payload.custom_slug:
+                short_url = Validator.generate_random_characters(length=5)
+            else:
+                raise HTTPException(status_code=409, detail="Custom slug already exists for this domain")
 
-        max_clicks = 5
         now = datetime.utcnow()
-        expires_at = now + timedelta(hours=1)
+        try:
+            expires_at = now + Validator.parse_duration_string(expiry)
+        except Exception:
+            raise HTTPException(status_code=400, detail="Invalid expiry string format")
 
         user_result = await db.exec(select(User).where(User.email == current_user))
         user = user_result.first()
@@ -141,41 +76,36 @@ class ShortenerController:
 
         password_hash = None
         if payload.password:
-            self.validate_password_strength(payload.password)
+            Validator.validate_password_strength(payload.password)
             password_hash = bcrypt.hashpw(payload.password.encode(), bcrypt.gensalt()).decode()
-
 
         shortened_url = ShortenedUrl(
             main_url=payload.main_url,
             short_url=short_url,
             custom_domain=domain,
-            max_clicks=max_clicks,
+            max_clicks=max_clicks or 5,
             created_at=now,
             updated_at=now,
             expires_at=expires_at,
             owner_email=current_user,
-            password_hash=password_hash
+            password_hash=password_hash,
+            title=payload.title
         )
         db.add(shortened_url)
         await db.commit()
 
         return ShortenUrlResponse(
             main_url=payload.main_url,
-            short_url=f"{self.ensure_http_prefix(app_config.default_domain).rstrip('/')}/{short_url}",
+            short_url=f"{Validator.ensure_http_prefix(domain).rstrip('/')}/{short_url}",
             custom_domain=domain,
-            max_clicks=max_clicks,
-            created_at=self.utc_to_ist(now).strftime("%Y-%m-%d %H:%M:%S"),
-            updated_at=self.utc_to_ist(now).strftime("%Y-%m-%d %H:%M:%S"),
-            expires_at=self.utc_to_ist(expires_at).strftime("%Y-%m-%d %H:%M:%S"),
+            max_clicks=max_clicks or 5,
+            created_at=Validator.utc_to_ist(now).strftime("%Y-%m-%d %H:%M:%S"),
+            updated_at=Validator.utc_to_ist(now).strftime("%Y-%m-%d %H:%M:%S"),
+            expires_at=Validator.utc_to_ist(expires_at).strftime("%Y-%m-%d %H:%M:%S"),
         )
 
-    async def _get_record_and_validate(
-        self,
-        db: AsyncSession,
-        short_url: str,
-        domain: str
-    ) -> ShortenedUrl:
-        domain = self.normalize_domain(domain)
+    async def _get_record_and_validate(self, db: AsyncSession, short_url: str, domain: str) -> ShortenedUrl:
+        domain = Validator.normalize_domain(domain)
         result = await db.exec(
             select(ShortenedUrl).where(
                 ShortenedUrl.short_url == short_url,
@@ -195,21 +125,21 @@ class ShortenerController:
         redis: Redis,
         user_email: str
     ):
-        old_domain = self.normalize_domain(payload.old_domain)
+        old_domain = Validator.normalize_domain(payload.old_domain)
         record = await self._get_record_and_validate(db, short_code, old_domain)
 
-        self._ensure_owner_permission(record, user_email)
+        Validator.ensure_owner_permission(record, user_email)
 
         new_slug = payload.new_slug or short_code
-        new_domain = self.normalize_domain(payload.new_domain) if payload.new_domain else old_domain
+        new_domain = Validator.normalize_domain(payload.new_domain) if payload.new_domain else old_domain
 
         if payload.new_slug:
-            validate_slug(payload.new_slug)
+            Validator.validate_slug(payload.new_slug)
         if payload.new_domain:
-            validate_domain(payload.new_domain)
+            Validator.validate_domain(payload.new_domain)
 
-        old_key = self.build_redis_key(old_domain, short_code)
-        new_key = self.build_redis_key(new_domain, new_slug)
+        old_key = Validator.build_redis_key(old_domain, short_code)
+        new_key = Validator.build_redis_key(new_domain, new_slug)
         main_url = record.main_url
 
         record.short_url = new_slug
@@ -241,16 +171,11 @@ class ShortenerController:
         short_url: str,
         request: Request,
         domain: Optional[str] = None,
-        password: Optional[str] = None 
+        password: Optional[str] = None
     ) -> RedirectResponse | JSONResponse:
-        if domain:
-            domain = self.normalize_domain(domain)
-        else:
-            raw_host = request.headers.get("host", "")
-            domain = self.normalize_domain(raw_host)
+        domain = Validator.normalize_domain(domain or request.headers.get("host", ""))
 
-        redis_key = self.build_redis_key(domain, short_url)
-
+        redis_key = Validator.build_redis_key(domain, short_url)
         result = await db.exec(select(ShortenedUrl).where(
             ShortenedUrl.short_url == short_url,
             ShortenedUrl.custom_domain == domain
@@ -277,20 +202,16 @@ class ShortenerController:
         if shortened_url.password_hash:
             ip_address = request.client.host
             fail_key = f"fail:{short_url}:{ip_address}"
-
             fail_count = await redis.get(fail_key)
+
             if fail_count and int(fail_count) >= self.MAX_ATTEMPTS:
-                raise HTTPException(
-                    status_code=429,
-                    detail="Too many failed attempts. Please try again later."
-                )
+                raise HTTPException(status_code=429, detail="Too many failed attempts. Please try again later.")
 
             if not password or not bcrypt.checkpw(password.encode(), shortened_url.password_hash.encode()):
                 await redis.incr(fail_key)
                 await redis.expire(fail_key, self.BLOCK_TIME_SECONDS)
                 raise HTTPException(status_code=401, detail="Password required or incorrect")
 
-            # On success: Clear the failed count
             await redis.delete(fail_key)
 
         shortened_url.click_count += 1
@@ -300,18 +221,12 @@ class ShortenerController:
 
         if not await redis.get(redis_key):
             ttl = int((shortened_url.expires_at - now).total_seconds())
-            ttl = min(ttl, self.MAX_CACHE_TTL)
-            if ttl > 0:
-                await redis.set(redis_key, shortened_url.main_url, ex=ttl)
+            await redis.set(redis_key, shortened_url.main_url, ex=min(ttl, self.MAX_CACHE_TTL))
+
+        await visit_service.log_visit(db=db, request=request, short_code=shortened_url.short_url)
 
         user_agent = request.headers.get("user-agent", "").lower()
         accept = request.headers.get("accept", "").lower()
-
-        await visit_service.log_visit(
-            db=db,
-            request=request,
-            short_code=shortened_url.short_url
-        )
 
         if "swagger" in user_agent or "json" in accept:
             return JSONResponse(
@@ -329,7 +244,6 @@ class ShortenerController:
 
         return RedirectResponse(url=shortened_url.main_url, status_code=302)
 
-
     async def update_main_url(
         self,
         db: AsyncSession,
@@ -339,20 +253,19 @@ class ShortenerController:
         payload: UpdateDestinationRequest,
         user_email: str
     ):
-        domain = self.normalize_domain(domain)
-        validate_http_url(str(payload.new_url))
+        domain = Validator.normalize_domain(domain)
+        Validator.validate_http_url(str(payload.new_url))
 
         record = await self._get_record_and_validate(db, short_code, domain)
-
-        self._ensure_owner_permission(record, user_email)
+        Validator.ensure_owner_permission(record, user_email)
 
         record.main_url = str(payload.new_url)
         record.updated_at = datetime.utcnow()
-
         db.add(record)
+
         try:
             await db.commit()
-            redis_key = self.build_redis_key(domain, short_code)
+            redis_key = Validator.build_redis_key(domain, short_code)
             await redis.set(redis_key, str(payload.new_url), ex=self.MAX_CACHE_TTL)
         except Exception:
             await db.rollback()
@@ -369,14 +282,12 @@ class ShortenerController:
         payload: UpdateUrlSettingsRequest,
         user_email: str
     ):
-        domain = self.normalize_domain(domain or app_config.default_domain)
+        domain = Validator.normalize_domain(domain or app_config.default_domain)
         record = await self._get_record_and_validate(db, short_code, domain)
-
-        if record.owner_email != user_email:
-            raise HTTPException(status_code=403, detail="You do not own this short URL")
+        Validator.ensure_owner_permission(record, user_email)
 
         if payload.expiry:
-            delta = self.parse_duration_string(payload.expiry)
+            delta = Validator.parse_duration_string(payload.expiry)
             record.expires_at = datetime.utcnow() + delta
 
         if payload.max_clicks is not None:
@@ -384,21 +295,20 @@ class ShortenerController:
 
         if payload.password is not None:
             if payload.password == "":
-                record.password_hash = None 
+                record.password_hash = None
             else:
-                self.validate_password_strength(payload.password)
+                Validator.validate_password_strength(payload.password)
                 record.password_hash = bcrypt.hashpw(payload.password.encode(), bcrypt.gensalt()).decode()
 
-
         record.updated_at = datetime.utcnow()
-
         db.add(record)
         await db.commit()
 
-        redis_key = self.build_redis_key(domain, short_code)
+        redis_key = Validator.build_redis_key(domain, short_code)
         await redis.set(redis_key, record.main_url, ex=self.MAX_CACHE_TTL)
 
         return {"message": "Short URL settings updated successfully"}
+
 
 # ✅ Create instance
 shortener_controller = ShortenerController()

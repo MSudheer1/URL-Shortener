@@ -23,6 +23,7 @@ class ShortenedUrl(BaseModel, table=True):
     main_url: str = Field(nullable=False, description="Original long URL")
     short_url: str = Field(nullable=False, description="Unique short code")
     custom_domain: Optional[str] = Field(default=None, index=True, description="Custom domain, if provided")
+    title: Optional[str] = Field(default=None, description="Optional title for dashboard/metadata")
     click_count: int = Field(default=0, nullable=False, description="Total number of redirects")
     max_clicks: Optional[int] = Field(default=None, description="Maximum allowed clicks")
     active: bool = Field(default=True, description="Whether the link is active")
@@ -32,7 +33,7 @@ class ShortenedUrl(BaseModel, table=True):
     expires_at: Optional[datetime] = Field(default=None, description="Expiry time of the short link")
     owner_email: Optional[str] = Field(default=None, index=True, description="Email of the user who owns this short URL")
     password_hash: Optional[str] = Field(default=None, nullable=True, description="Hashed password for protecting access to this short URL. If None, the URL is public.")
-
+    
 class VisitLog(SQLModel, table=True):
     __table_args__ = {"extend_existing": True}
 
