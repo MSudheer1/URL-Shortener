@@ -4,7 +4,7 @@ from sqlmodel import select
 from services.db import get_session
 from services.redis import get_redis
 from apps.shortener.models import ShortenedUrl
-from apps.shortener.controllers import shortener_controller
+from utils.validators import Validator
 
 scheduler = AsyncIOScheduler()
 
@@ -13,7 +13,7 @@ async def cleanup_expired_urls():
     session_gen = get_session()
     db = await anext(session_gen)
 
-    # ✅ CORRECT: Just await this since get_redis is a coroutine
+    # Just await this since get_redis is a coroutine
     redis = await get_redis()
 
     try:
@@ -22,7 +22,7 @@ async def cleanup_expired_urls():
         expired_urls = result.all()
 
         for url in expired_urls:
-            redis_key = shortener_controller.build_redis_key(url.custom_domain, url.short_url)
+            redis_key = Validator.build_redis_key(url.custom_domain, url.short_url)
             await redis.delete(redis_key)
             await db.delete(url)
 

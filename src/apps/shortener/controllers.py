@@ -20,6 +20,7 @@ from apps.shortener.models import ShortenedUrl, User
 from core.config import app_config
 from services.visit_service import visit_service
 from sqlalchemy.exc import IntegrityError
+from utils.password_utils import hash_password, verify_password
 from utils.validators import Validator
 
 logger = logging.getLogger("uvicorn.error")
@@ -77,7 +78,7 @@ class ShortenerController:
         password_hash = None
         if payload.password:
             Validator.validate_password_strength(payload.password)
-            password_hash = bcrypt.hashpw(payload.password.encode(), bcrypt.gensalt()).decode()
+            password_hash = hash_password(payload.password)
 
         shortened_url = ShortenedUrl(
             main_url=payload.main_url,
@@ -204,25 +205,31 @@ class ShortenerController:
             fail_key = f"fail:{short_url}:{ip_address}"
             fail_count = await redis.get(fail_key)
 
+            # Block if too many failed attempts
             if fail_count and int(fail_count) >= self.MAX_ATTEMPTS:
                 raise HTTPException(status_code=429, detail="Too many failed attempts. Please try again later.")
 
+            # Password not provided or incorrect
             if not password or not bcrypt.checkpw(password.encode(), shortened_url.password_hash.encode()):
                 await redis.incr(fail_key)
                 await redis.expire(fail_key, self.BLOCK_TIME_SECONDS)
                 raise HTTPException(status_code=401, detail="Password required or incorrect")
 
+            # Password is correct — clear the fail count
             await redis.delete(fail_key)
 
+        # Update visit info
         shortened_url.click_count += 1
         shortened_url.updated_at = now
         db.add(shortened_url)
         await db.commit()
 
+        # Cache the redirect target if not already cached
         if not await redis.get(redis_key):
             ttl = int((shortened_url.expires_at - now).total_seconds())
             await redis.set(redis_key, shortened_url.main_url, ex=min(ttl, self.MAX_CACHE_TTL))
 
+        # Log the visit (optional analytics)
         await visit_service.log_visit(db=db, request=request, short_code=shortened_url.short_url)
 
         user_agent = request.headers.get("user-agent", "").lower()
