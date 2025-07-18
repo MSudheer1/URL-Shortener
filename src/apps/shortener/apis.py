@@ -1,8 +1,11 @@
+from datetime import datetime
+import os
 from typing import Optional, List
 import csv
 from io import StringIO
 from fastapi import (
     APIRouter,
+    BackgroundTasks,
     Depends,
     HTTPException,
     Path,
@@ -12,9 +15,9 @@ from fastapi import (
     UploadFile,
     File,
 )
-from fastapi.responses import StreamingResponse
+import tempfile
 from fastapi.params import Body
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse, FileResponse, StreamingResponse
 
 from redis.asyncio import Redis
 from sqlmodel.ext.asyncio.session import AsyncSession
@@ -42,6 +45,7 @@ from services.visit_service import visit_service
 from services import campaign_services
 from services.db import get_session
 from services.redis import get_redis
+from utils.validators import Validator
 
 
 
@@ -200,7 +204,7 @@ async def delete_short_url(
     redis: Redis = Depends(get_redis),
     current_user: str = Depends(get_current_user) 
 ):
-    normalized_domain = shortener_controller.normalize_domain(domain or "")
+    normalized_domain = Validator.normalize_domain(domain or "")
 
     result = await db.exec(select(ShortenedUrl).where(
         ShortenedUrl.short_url == short_code,
@@ -215,7 +219,7 @@ async def delete_short_url(
     if record.owner_email != current_user:
         raise HTTPException(status_code=403, detail="You do not have permission to delete this URL")
 
-    redis_key = shortener_controller.build_redis_key(normalized_domain, short_code)
+    redis_key = Validator.build_redis_key(normalized_domain, short_code)
 
     await db.delete(record)
     await db.commit()
@@ -262,69 +266,201 @@ async def update_url_settings(
     )
 
 
-@shortener_router.post("/bulk-shorten", response_class=StreamingResponse)
-async def bulk_shorten_urls(
-    file: UploadFile = File(...),
-    db: AsyncSession = Depends(get_session),
-    redis: Redis = Depends(get_redis),
-    current_user: str = Depends(get_current_user),
+
+# @shortener_router.post("/bulk-shorten", response_class=FileResponse)
+# async def bulk_shorten_urls(
+#     background_tasks: BackgroundTasks,
+#     file: UploadFile = File(...),
+#     db: AsyncSession = Depends(get_session),
+#     redis: Redis = Depends(get_redis),
+#     current_user: str = Depends(get_current_user)
+# ):
+#     content = await file.read()
+#     decoded = content.decode("utf-8")
+#     csv_reader = csv.DictReader(StringIO(decoded))
+
+#     output = StringIO()
+#     fieldnames = ["row", "main_url", "short_url", "error", "status"]
+#     writer = csv.DictWriter(output, fieldnames=fieldnames)
+#     writer.writeheader()
+
+#     for idx, row in enumerate(csv_reader, start=1):
+#         try:
+#             payload = ShortenUrlRequest(
+#                 main_url=row.get("main_url", "").strip(),
+#                 custom_slug=row.get("custom_slug") or None,
+#                 custom_domain=row.get("custom_domain") or None,
+#                 expiry=row.get("expiry") or None,
+#                 max_clicks=int(row.get("max_clicks")) if row.get("max_clicks") else None,
+#                 password=row.get("password") or None,
+#                 title=row.get("title") or None,
+#             )
+
+#             result = await shortener_controller.shorten(
+#                 db=db,
+#                 payload=payload,
+#                 redis=redis,
+#                 current_user=current_user,
+#                 expiry=payload.expiry or "1h",
+#                 max_clicks=payload.max_clicks or 5,
+#             )
+
+#             writer.writerow({
+#                 "row": idx,
+#                 "main_url": payload.main_url,
+#                 "short_url": result.short_url,
+#                 "error": "",
+#                 "status": "success"
+#             })
+
+#         except Exception as e:
+#             writer.writerow({
+#                 "row": idx,
+#                 "main_url": row.get("main_url", "").strip(),
+#                 "short_url": "",
+#                 "error": str(e),
+#                 "status": "failed"
+#             })
+
+#     output.seek(0)
+
+#     temp_file = tempfile.NamedTemporaryFile(delete=False, mode="w", newline='', suffix=".csv", encoding="utf-8")
+#     temp_file.write(output.getvalue())
+#     temp_file.flush()
+#     temp_file.close()
+
+#     # ✅ Add background task to delete file
+#     background_tasks.add_task(os.remove, temp_file.name)
+
+#     return FileResponse(
+#         path=temp_file.name,
+#         filename="bulk_shorten_results.csv",
+#         media_type="text/csv"
+#     )
+
+
+
+# @shortener_router.post("/bulk-update", response_class=StreamingResponse)
+# async def bulk_update_urls(
+#     file: UploadFile = File(...),
+#     db: AsyncSession = Depends(get_session),
+#     redis: Redis = Depends(get_redis),
+#     current_user: str = Depends(get_current_user)
+# ):
+#     content = await file.read()
+#     decoded = content.decode("utf-8")
+#     csv_reader = csv.DictReader(StringIO(decoded))
+
+#     output = StringIO()
+#     fieldnames = ["row", "short_code", "status", "error"]
+#     writer = csv.DictWriter(output, fieldnames=fieldnames)
+#     writer.writeheader()
+
+#     for idx, row in enumerate(csv_reader, start=1):
+#         try:
+#             short_code = row.get("short_code", "").strip()
+
+#             result = await db.execute(
+#                 select(ShortenedUrl).where(
+#                     ShortenedUrl.short_url == short_code,
+#                     ShortenedUrl.owner_email == current_user
+#                 )
+#             )
+#             shortened = result.scalar_one_or_none()
+#             if not shortened:
+#                 raise Exception("Short code not found or unauthorized")
+
+#             # Update fields
+#             if row.get("new_main_url"):
+#                 shortened.main_url = row["new_main_url"].strip()
+
+#             if row.get("new_slug"):
+#                 shortened.short_url = row["new_slug"].strip()
+
+#             if row.get("new_custom_domain"):
+#                 shortened.custom_domain = row["new_custom_domain"].strip()
+
+#             if row.get("new_expiry"):
+#                 duration = Validator.parse_duration_string(row["new_expiry"])
+#                 shortened.expires_at = datetime.utcnow() + duration
+
+#             if row.get("new_max_clicks"):
+#                 shortened.max_clicks = int(row["new_max_clicks"])
+
+#             await db.commit()
+
+#             # Invalidate Redis
+#             redis_key = f"url:{shortened.custom_domain or 'default'}:{shortened.short_url}"
+#             await redis.delete(redis_key)
+
+#             writer.writerow({
+#                 "row": idx,
+#                 "short_code": short_code,
+#                 "status": "success",
+#                 "error": ""
+#             })
+
+#         except Exception as e:
+#             await db.rollback()
+#             writer.writerow({
+#                 "row": idx,
+#                 "short_code": row.get("short_code", ""),
+#                 "status": "failed",
+#                 "error": str(e)
+#             })
+
+#     output.seek(0)
+
+#     response = StreamingResponse(
+#         iter([output.getvalue()]),
+#         media_type="text/csv"
+#     )
+#     response.headers["Content-Disposition"] = "attachment; filename=bulk_update_results.csv"
+#     return response
+
+
+
+# Get analytics for a short code
+@shortener_router.get("/analytics/{short_code}",
+    responses={
+        200: {
+            "description": "Click statistics for a short URL",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "short_code": "abc12",
+                        "domain": "surl.signitivessoft.com",
+                        "clicks": 5
+                    }
+                }
+            },
+        },
+        404: {"description": "Shortened URL not found"},
+    },
+)
+async def get_click_count(
+    short_code: str,
+    domain: Optional[str] = Query(None),
+    session: AsyncSession = Depends(get_session)
 ):
-    content = await file.read()
-    decoded = content.decode("utf-8")
-    csv_reader = csv.DictReader(StringIO(decoded))
+    normalized_domain = Validator.normalize_domain(domain or "")
 
-    output = StringIO()
-    fieldnames = ["row", "main_url", "short_url", "error", "status"]
-    writer = csv.DictWriter(output, fieldnames=fieldnames)
-    writer.writeheader()
-
-    for idx, row in enumerate(csv_reader, start=1):
-        try:
-            payload = ShortenUrlRequest(
-                main_url=row.get("main_url", "").strip(),
-                custom_slug=row.get("custom_slug") or None,
-                custom_domain=row.get("custom_domain") or None,
-                expiry=row.get("expiry") or None,
-                max_clicks=int(row.get("max_clicks")) if row.get("max_clicks") else None,
-                password=row.get("password") or None,
-                title=row.get("title") or None,
-            )
-
-            result = await shortener_controller.shorten(
-                db=db,
-                payload=payload,
-                redis=redis,
-                current_user=current_user,
-                expiry=payload.expiry or "1h",
-                max_clicks=payload.max_clicks or 5,
-            )
-
-            writer.writerow({
-                "row": idx,
-                "main_url": payload.main_url,
-                "short_url": result.short_url,
-                "error": "",
-                "status": "success"
-            })
-
-        except Exception as e:
-            writer.writerow({
-                "row": idx,
-                "main_url": row.get("main_url", "").strip(),
-                "short_url": "",
-                "error": str(e),
-                "status": "failed"
-            })
-
-    output.seek(0)
-    return StreamingResponse(
-        output,
-        media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=bulk_result.csv"}
+    result = await session.exec(
+        select(ShortenedUrl).where(
+            ShortenedUrl.short_url == short_code,
+            ShortenedUrl.custom_domain == normalized_domain
+        )
     )
+    url = result.first()
 
+    if not url:
+        raise HTTPException(status_code=404, detail="Shortened URL not found")
 
-
+    return {
+        "short_code": short_code,
+        "domain": normalized_domain,
+        "clicks": url.click_count
+    }
 
 # --- Visit Logs by Client IP API ---
 @shortener_router.get("/visitlogs/client/{client_ip}")

@@ -1,0 +1,14 @@
+row,input,status,error
+1,https://www.google.com,failed,Task <Task pending name='Task-3' coro=<run_bulk_task() running at C:\Users\91984\Downloads\URL-Short\src\tasks\workers.py:44> cb=[_run_until_complete_cb() at C:\Program Files\Python313\Lib\asyncio\base_events.py:181]> got Future <Future pending cb=[BaseProtocol._on_waiter_completed()]> attached to a different loop
+2,https://www.github.com,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('AquU8',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+3,https://openai.com,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('UvD8k',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"

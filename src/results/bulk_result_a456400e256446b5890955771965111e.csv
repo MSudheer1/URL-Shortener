@@ -1,0 +1,4 @@
+row,input,status,error
+1,https://www.google.com,failed,Missing 'user_email'
+2,https://www.github.com,failed,Missing 'user_email'
+3,https://openai.com,failed,Missing 'user_email'

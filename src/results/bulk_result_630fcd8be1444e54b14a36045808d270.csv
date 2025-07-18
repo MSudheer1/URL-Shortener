@@ -1,0 +1,19 @@
+row,input,status,error
+1,https://www.google.com,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('zC13O',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+2,https://www.github.com,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('rg40c',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+3,https://openai.com,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('1U19O',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"

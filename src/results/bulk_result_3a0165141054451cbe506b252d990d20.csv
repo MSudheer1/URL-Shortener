@@ -1,0 +1,596 @@
+row,input,status,error
+1,https://example.com/page1,failed,Task <Task pending name='Task-102' coro=<run_bulk_task() running at C:\Users\91984\Downloads\URL-Short\src\tasks\workers.py:41> cb=[_run_until_complete_cb() at C:\Program Files\Python313\Lib\asyncio\base_events.py:181]> got Future <Future pending cb=[BaseProtocol._on_waiter_completed()]> attached to a different loop
+2,https://example.com/page2,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug2',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+3,https://example.com/page3,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug3',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+4,https://example.com/page4,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug4',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+5,https://example.com/page5,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug5',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+6,https://example.com/page6,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug6',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+7,https://example.com/page7,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug7',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+8,https://example.com/page8,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug8',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+9,https://example.com/page9,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug9',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+10,https://example.com/page10,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug10',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+11,https://example.com/page11,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug11',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+12,https://example.com/page12,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug12',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+13,https://example.com/page13,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug13',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+14,https://example.com/page14,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug14',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+15,https://example.com/page15,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug15',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+16,https://example.com/page16,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug16',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+17,https://example.com/page17,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug17',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+18,https://example.com/page18,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug18',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+19,https://example.com/page19,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug19',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+20,https://example.com/page20,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug20',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+21,https://example.com/page21,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug21',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+22,https://example.com/page22,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug22',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+23,https://example.com/page23,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug23',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+24,https://example.com/page24,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug24',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+25,https://example.com/page25,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug25',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+26,https://example.com/page26,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug26',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+27,https://example.com/page27,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug27',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+28,https://example.com/page28,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug28',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+29,https://example.com/page29,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug29',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+30,https://example.com/page30,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug30',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+31,https://example.com/page31,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug31',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+32,https://example.com/page32,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug32',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+33,https://example.com/page33,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug33',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+34,https://example.com/page34,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug34',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+35,https://example.com/page35,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug35',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+36,https://example.com/page36,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug36',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+37,https://example.com/page37,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug37',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+38,https://example.com/page38,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug38',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+39,https://example.com/page39,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug39',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+40,https://example.com/page40,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug40',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+41,https://example.com/page41,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug41',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+42,https://example.com/page42,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug42',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+43,https://example.com/page43,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug43',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+44,https://example.com/page44,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug44',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+45,https://example.com/page45,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug45',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+46,https://example.com/page46,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug46',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+47,https://example.com/page47,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug47',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+48,https://example.com/page48,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug48',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+49,https://example.com/page49,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug49',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+50,https://example.com/page50,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug50',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+51,https://example.com/page51,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug51',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+52,https://example.com/page52,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug52',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+53,https://example.com/page53,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug53',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+54,https://example.com/page54,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug54',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+55,https://example.com/page55,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug55',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+56,https://example.com/page56,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug56',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+57,https://example.com/page57,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug57',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+58,https://example.com/page58,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug58',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+59,https://example.com/page59,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug59',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+60,https://example.com/page60,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug60',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+61,https://example.com/page61,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug61',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+62,https://example.com/page62,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug62',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+63,https://example.com/page63,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug63',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+64,https://example.com/page64,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug64',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+65,https://example.com/page65,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug65',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+66,https://example.com/page66,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug66',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+67,https://example.com/page67,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug67',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+68,https://example.com/page68,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug68',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+69,https://example.com/page69,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug69',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+70,https://example.com/page70,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug70',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+71,https://example.com/page71,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug71',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+72,https://example.com/page72,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug72',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+73,https://example.com/page73,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug73',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+74,https://example.com/page74,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug74',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+75,https://example.com/page75,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug75',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+76,https://example.com/page76,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug76',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+77,https://example.com/page77,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug77',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+78,https://example.com/page78,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug78',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+79,https://example.com/page79,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug79',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+80,https://example.com/page80,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug80',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+81,https://example.com/page81,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug81',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+82,https://example.com/page82,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug82',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+83,https://example.com/page83,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug83',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+84,https://example.com/page84,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug84',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+85,https://example.com/page85,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug85',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+86,https://example.com/page86,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug86',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+87,https://example.com/page87,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug87',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+88,https://example.com/page88,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug88',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+89,https://example.com/page89,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug89',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+90,https://example.com/page90,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug90',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+91,https://example.com/page91,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug91',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+92,https://example.com/page92,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug92',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+93,https://example.com/page93,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug93',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+94,https://example.com/page94,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug94',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+95,https://example.com/page95,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug95',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+96,https://example.com/page96,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug96',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+97,https://example.com/page97,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug97',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+98,https://example.com/page98,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug98',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+99,https://example.com/page99,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug99',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"
+100,https://example.com/page100,failed,"(sqlalchemy.dialects.postgresql.asyncpg.InterfaceError) <class 'asyncpg.exceptions._base.InterfaceError'>: cannot perform operation: another operation is in progress
+[SQL: SELECT shortenedurl.id, shortenedurl.main_url, shortenedurl.short_url, shortenedurl.custom_domain, shortenedurl.title, shortenedurl.click_count, shortenedurl.max_clicks, shortenedurl.active, shortenedurl.expired, shortenedurl.created_at, shortenedurl.updated_at, shortenedurl.expires_at, shortenedurl.owner_email, shortenedurl.password_hash 
+FROM shortenedurl 
+WHERE shortenedurl.short_url = $1::VARCHAR]
+[parameters: ('slug100',)]
+(Background on this error at: https://sqlalche.me/e/20/rvf5)"

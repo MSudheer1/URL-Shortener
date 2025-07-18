@@ -1,0 +1,4 @@
+row,input,status,error
+1,https://www.google.com,failed,'AsyncSession' object has no attribute 'exec'
+2,https://www.github.com,failed,'AsyncSession' object has no attribute 'exec'
+3,https://openai.com,failed,'AsyncSession' object has no attribute 'exec'

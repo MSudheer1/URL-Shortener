@@ -23,7 +23,7 @@ class Validator:
             raise HTTPException(status_code=400, detail="Password must contain at least one special character.")
         if re.match(r"^[!@#$%^&*(),.?\":{}|<>_\-+=]", password):
             raise HTTPException(status_code=400, detail="Password should not start with a special character.")
-
+    
     # === Expiry Format Validation ===
     @staticmethod
     def parse_duration_string(duration_str: str) -> timedelta:

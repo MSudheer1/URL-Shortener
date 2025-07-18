@@ -3,9 +3,8 @@ import platform
 import psutil
 import uuid
 
-from fastapi import FastAPI, Depends, Request
+from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 
 from sqlmodel import SQLModel
@@ -22,6 +21,8 @@ from middlewares.response_schema import (
     response_schema_middleware,
 )
 from core.auth import router as auth_router
+from apps.shortener.bulk_apis import router as bulk_router
+
 
 # App Initialization
 app = FastAPI()
@@ -33,6 +34,7 @@ app.include_router(main_router)
 app.include_router(shortener_router)
 app.include_router(campaign_router)
 app.include_router(qr_router)
+app.include_router(bulk_router)               # Bulk operations
 
 
 # Events
